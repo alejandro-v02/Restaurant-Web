@@ -1,10 +1,20 @@
 # 🔥 FogónPOS — Sistema para restaurantes con facturación electrónica
 
-Sistema de gestión para restaurantes en Colombia: mesas, pedidos, cocina en tiempo real, caja y **facturación electrónica DIAN** (tiquete POS electrónico y factura electrónica de venta).
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![Progreso](https://img.shields.io/badge/progreso-3%2F12%20fases-yellow)
 
-> Proyecto de portafolio. La facturación usa un **adaptador simulado** que genera CUFE/CUDE reales (SHA-384) y PDF con QR, y está diseñado para conectarse a un proveedor tecnológico real sin tocar el dominio.
+Punto de venta (POS) completo para restaurantes en Colombia, pensado como un sistema real de operación diaria: **mesas y pedidos**, **cocina en tiempo real**, **caja** y **facturación electrónica DIAN** (tiquete POS electrónico y factura electrónica de venta), todo sobre un backend con **arquitectura hexagonal** para que el dominio del negocio no dependa del framework, la base de datos ni del proveedor de facturación.
+
+> **Proyecto de portafolio.** La facturación usa un **adaptador simulado** que genera CUFE/CUDE reales (SHA-384) y PDF con QR, construido detrás de un puerto para poder conectar un proveedor tecnológico real sin tocar el dominio (Fase 10). Las tarifas e implementación son de referencia, no asesoría contable.
 
 Este repositorio contiene el **backend** y el **panel web** (admin, caja y cocina). La app Android para meseros se documentará en `frontend/projects/meseros/README.md` cuando se construya (Fase 3).
+
+**Estado actual:** Fases 0 a 2 completas — monorepo, arquitectura hexagonal con 7 módulos de dominio, autenticación JWT con login por PIN para meseros, y CRUD de catálogo. Ver el detalle fase por fase en [Plan de desarrollo](#-plan-de-desarrollo).
 
 ---
 
