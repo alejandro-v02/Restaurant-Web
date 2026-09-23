@@ -174,33 +174,23 @@ Usuarios de prueba creados por el seed:
 
 ## 🔐 Variables de entorno
 
-Archivo `backend/.env` (ver `backend/.env.example`):
+El backend lee su configuración de `backend/.env`, que **no se versiona** (está en `.gitignore`). Copia la plantilla y ajusta los valores según tu entorno:
 
-```env
-PORT=3000
-NODE_ENV=development
-
-DB_HOST=localhost
-DB_PORT=5434
-DB_USER=fogon
-DB_PASSWORD=fogon
-DB_NAME=fogon_pos
-
-REDIS_HOST=localhost
-REDIS_PORT=6379
-
-JWT_SECRET=cambiar_en_produccion
-JWT_EXPIRES_IN=12h
-
-# simulado | <nombre-proveedor>
-FACTURACION_PROVEEDOR=simulado
-FACTURACION_API_URL=
-FACTURACION_API_KEY=
-
-CORS_ORIGINS=http://localhost:4200,http://localhost:4300
+```bash
+cd backend
+cp .env.example .env
 ```
 
-> `DB_PORT` se mapea a `5434` en `docker-compose.yml` en lugar del `5432` por defecto, para evitar choques con otras instancias de PostgreSQL (nativas o de otros proyectos en Docker) en la máquina de desarrollo. Ajusta el valor si tu entorno no tiene ese conflicto.
+| Variable | Descripción |
+|---|---|
+| `PORT`, `NODE_ENV` | Puerto y entorno del backend |
+| `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` | Conexión a PostgreSQL |
+| `REDIS_HOST`, `REDIS_PORT` | Conexión a Redis (colas BullMQ) |
+| `JWT_SECRET`, `JWT_EXPIRES_IN` | Firma y expiración de los tokens de sesión |
+| `FACTURACION_PROVEEDOR`, `FACTURACION_API_URL`, `FACTURACION_API_KEY` | Adaptador de facturación electrónica activo (`simulado` por defecto) |
+| `CORS_ORIGINS` | Orígenes permitidos para el panel web (separados por coma) |
+
+> `DB_PORT` en `.env.example` usa `5434` en lugar del `5432` por defecto, porque `docker-compose.yml` mapea Postgres a ese puerto para evitar choques con otras instancias de PostgreSQL (nativas o de otros proyectos en Docker) en la máquina de desarrollo. Ajusta ambos si tu entorno no tiene ese conflicto.
 
 ---
 
