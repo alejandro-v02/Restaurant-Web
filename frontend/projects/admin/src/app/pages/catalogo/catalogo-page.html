@@ -39,9 +39,17 @@
 
         @for (producto of grupo.productos; track producto.id) {
           <div class="flex items-center justify-between border-b border-gray-300 px-4 py-2 last:border-b-0">
-            <span class="text-sm">{{ producto.nombre }}</span>
+            <span class="text-sm" [class.text-gray-400]="!producto.disponible">
+              {{ producto.nombre }}
+              @if (!producto.disponible) {
+                (no disponible)
+              }
+            </span>
             <div class="flex items-center gap-4">
               <span class="text-sm">${{ producto.precio }}</span>
+              <ui-button variant="secondary" (pressed)="onEditarProducto(producto)">
+                Editar
+              </ui-button>
               <ui-button variant="secondary" (pressed)="onEliminarProducto(producto.id)">
                 Eliminar
               </ui-button>
@@ -56,3 +64,19 @@
     }
   </div>
 </div>
+
+@if (productoSeleccionado(); as producto) {
+  <ui-modal titulo="Editar producto" (cerrar)="onCerrarModal()">
+    @if (errorEditar()) {
+      <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
+        {{ errorEditar() }}
+      </p>
+    }
+    <ui-producto-editar-form
+      [producto]="producto"
+      [categorias]="categorias()"
+      [loading]="guardandoProducto()"
+      (guardado)="onGuardarProducto(producto.id, $event)"
+    />
+  </ui-modal>
+}

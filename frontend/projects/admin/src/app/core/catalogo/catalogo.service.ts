@@ -15,6 +15,14 @@ export interface CrearProductoInput {
   tipoImpuesto: TipoImpuesto;
 }
 
+export interface ActualizarProductoInput {
+  categoriaId?: string;
+  nombre?: string;
+  precio?: number;
+  tipoImpuesto?: TipoImpuesto;
+  disponible?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class CatalogoService {
   private readonly http = inject(HttpClient);
@@ -38,6 +46,10 @@ export class CatalogoService {
 
   crearProducto(input: CrearProductoInput): Observable<Producto> {
     return this.http.post<Producto>(`${API_BASE_URL}/productos`, input);
+  }
+
+  actualizarProducto(id: string, input: ActualizarProductoInput): Observable<Producto> {
+    return this.http.patch<Producto>(`${API_BASE_URL}/productos/${id}`, input);
   }
 
   eliminarProducto(id: string): Observable<void> {
