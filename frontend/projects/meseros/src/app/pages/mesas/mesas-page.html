@@ -1,0 +1,74 @@
+<div class="flex min-h-screen flex-col">
+  <header class="flex items-center justify-between border-b border-gray-300 p-4">
+    <span class="text-base">🔥 <strong>{{ usuario()?.nombre }}</strong></span>
+    <ui-button variant="secondary" (pressed)="onLogout()">Salir</ui-button>
+  </header>
+
+  <main class="flex-1 overflow-y-auto p-4">
+    @if (errorMensaje()) {
+      <p class="mb-4 border border-gray-300 p-3 text-sm text-red-600" role="alert">
+        {{ errorMensaje() }}
+      </p>
+    }
+
+    @if (cargando()) {
+      <p class="text-sm text-gray-500">Cargando mesas…</p>
+    } @else {
+      <section class="mb-8">
+        <h2 class="mb-3 text-base font-semibold">Mis mesas</h2>
+        <div class="grid grid-cols-2 gap-3">
+          @for (mesa of misMesas(); track mesa.id) {
+            <div class="flex flex-col items-center gap-2 border border-gray-300 p-4">
+              <span class="text-2xl font-semibold">{{ mesa.numero }}</span>
+              <span class="text-xs text-gray-500">{{ mesa.capacidad }} personas</span>
+              <ui-button
+                variant="secondary"
+                [fullWidth]="true"
+                [loading]="procesando() === mesa.id"
+                (pressed)="onLiberar(mesa)"
+              >
+                Liberar
+              </ui-button>
+            </div>
+          } @empty {
+            <p class="col-span-2 text-sm text-gray-400">No tienes mesas tomadas todavía.</p>
+          }
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="mb-3 text-base font-semibold">Mesas libres</h2>
+        <div class="grid grid-cols-2 gap-3">
+          @for (mesa of mesasLibres(); track mesa.id) {
+            <button
+              type="button"
+              class="flex flex-col items-center gap-2 border border-gray-300 p-4 disabled:opacity-60"
+              [disabled]="procesando() === mesa.id"
+              (click)="onTomar(mesa)"
+            >
+              <span class="text-2xl font-semibold">{{ mesa.numero }}</span>
+              <span class="text-xs text-gray-500">{{ mesa.capacidad }} personas</span>
+              <span class="text-xs">Tomar mesa</span>
+            </button>
+          } @empty {
+            <p class="col-span-2 text-sm text-gray-400">No hay mesas libres.</p>
+          }
+        </div>
+      </section>
+
+      <section>
+        <h2 class="mb-3 text-base font-semibold">Ocupadas por otros meseros</h2>
+        <div class="grid grid-cols-2 gap-3">
+          @for (mesa of mesasDeOtros(); track mesa.id) {
+            <div class="flex flex-col items-center gap-2 border border-gray-300 p-4 text-gray-400">
+              <span class="text-2xl font-semibold">{{ mesa.numero }}</span>
+              <span class="text-xs">Ocupada</span>
+            </div>
+          } @empty {
+            <p class="col-span-2 text-sm text-gray-400">No hay otras mesas ocupadas.</p>
+          }
+        </div>
+      </section>
+    }
+  </main>
+</div>

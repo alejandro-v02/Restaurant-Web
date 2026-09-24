@@ -1,0 +1,16 @@
+<button
+  class="inline-flex min-h-[3rem] items-center justify-center gap-2 border border-gray-300 px-4 py-3 text-base disabled:cursor-not-allowed disabled:opacity-60"
+  [class.w-full]="fullWidth()"
+  [class.font-semibold]="variant() === 'primary'"
+  [type]="type()"
+  [disabled]="disabled() || loading()"
+  (click)="onClick()"
+>
+  @if (loading()) {
+    <span
+      class="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600"
+      aria-hidden="true"
+    ></span>
+  }
+  <ng-content />
+</button>
