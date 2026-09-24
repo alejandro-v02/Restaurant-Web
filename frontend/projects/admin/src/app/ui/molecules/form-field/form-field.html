@@ -1,5 +1,5 @@
 <div class="mb-4 flex flex-col gap-1.5">
-  <label class="text-sm font-semibold text-slate-600" [for]="inputId()">{{ label() }}</label>
+  <label class="text-sm" [for]="inputId()">{{ label() }}</label>
   <ng-content />
   @if (errorMessage()) {
     <p class="text-sm text-red-600" role="alert">{{ errorMessage() }}</p>
