@@ -4,12 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { CatalogoService } from '../../core/catalogo/catalogo.service';
 import { Categoria, Producto } from '../../core/catalogo/catalogo.models';
-import { AgregarItemInput, PedidoService } from '../../core/pedidos/pedido.service';
+import { PedidoService } from '../../core/pedidos/pedido.service';
 import { Pedido, PedidoItem } from '../../core/pedidos/pedido.models';
 import { ButtonAtom } from '../../ui/atoms/button/button';
 import { InputAtom } from '../../ui/atoms/input/input';
-
-type Vista = 'menu' | 'cantidad';
 
 @Component({
   selector: 'app-pedido-page',
@@ -33,13 +31,9 @@ export class PedidoPage {
   readonly items = signal<PedidoItem[]>([]);
   readonly cargando = signal(true);
   readonly enviando = signal(false);
-  readonly agregando = signal(false);
+  readonly procesandoProductoId = signal<string | null>(null);
   readonly errorMensaje = signal<string | null>(null);
-
-  readonly vista = signal<Vista>('menu');
-  readonly productoSeleccionado = signal<Producto | null>(null);
-  readonly cantidad = signal('1');
-  readonly notas = signal('');
+  readonly notasDraft = signal<Record<string, string>>({});
 
   readonly productosDeCategoria = computed(() => {
     const catId = this.categoriaActivaId();
@@ -58,56 +52,95 @@ export class PedidoPage {
     return this.productos().find((producto) => producto.id === productoId)?.nombre ?? '—';
   }
 
+  itemPorProducto(productoId: string): PedidoItem | undefined {
+    return this.items().find((item) => item.productoId === productoId);
+  }
+
+  cantidadDe(productoId: string): number {
+    return this.itemPorProducto(productoId)?.cantidad ?? 0;
+  }
+
+  notaDe(productoId: string): string {
+    return this.notasDraft()[productoId] ?? this.itemPorProducto(productoId)?.notas ?? '';
+  }
+
   onElegirCategoria(id: string): void {
     this.categoriaActivaId.set(id);
   }
 
-  onSeleccionarProducto(producto: Producto): void {
-    this.productoSeleccionado.set(producto);
-    this.cantidad.set('1');
-    this.notas.set('');
-    this.vista.set('cantidad');
-  }
-
-  onCancelarCantidad(): void {
-    this.productoSeleccionado.set(null);
-    this.vista.set('menu');
-  }
-
-  onAgregar(): void {
-    const producto = this.productoSeleccionado();
+  onIncrementar(producto: Producto): void {
     const pedido = this.pedido();
-    if (!producto || !pedido) {
+    if (!pedido || this.procesandoProductoId()) {
       return;
     }
+    const item = this.itemPorProducto(producto.id);
+    this.procesandoProductoId.set(producto.id);
+    this.errorMensaje.set(null);
 
-    const input: AgregarItemInput = {
-      productoId: producto.id,
-      cantidad: Number(this.cantidad()),
-      notas: this.notas() || undefined,
-    };
+    const observable = item
+      ? this.pedidoService.actualizarItem(item.id, { cantidad: item.cantidad + 1 })
+      : this.pedidoService.agregarItem(pedido.id, { productoId: producto.id, cantidad: 1 });
 
-    this.agregando.set(true);
-    this.pedidoService.agregarItem(pedido.id, input).subscribe({
-      next: (item) => {
-        this.agregando.set(false);
-        this.items.update((items) => [...items, item]);
-        this.vista.set('menu');
-        this.productoSeleccionado.set(null);
+    observable.subscribe({
+      next: (itemActualizado) => {
+        this.procesandoProductoId.set(null);
+        this.reemplazarItem(itemActualizado);
       },
       error: (error) => {
-        this.agregando.set(false);
+        this.procesandoProductoId.set(null);
         this.errorMensaje.set(error?.error?.message ?? 'No se pudo agregar el producto');
       },
     });
   }
 
-  onQuitarItem(item: PedidoItem): void {
+  onDecrementar(producto: Producto): void {
+    const item = this.itemPorProducto(producto.id);
+    if (!item || this.procesandoProductoId()) {
+      return;
+    }
+    this.procesandoProductoId.set(producto.id);
     this.errorMensaje.set(null);
-    this.pedidoService.eliminarItem(item.id).subscribe({
-      next: () => this.items.update((items) => items.filter((existente) => existente.id !== item.id)),
+
+    if (item.cantidad <= 1) {
+      this.pedidoService.eliminarItem(item.id).subscribe({
+        next: () => {
+          this.procesandoProductoId.set(null);
+          this.items.update((items) => items.filter((existente) => existente.id !== item.id));
+        },
+        error: (error) => {
+          this.procesandoProductoId.set(null);
+          this.errorMensaje.set(error?.error?.message ?? 'No se pudo quitar el producto');
+        },
+      });
+      return;
+    }
+
+    this.pedidoService.actualizarItem(item.id, { cantidad: item.cantidad - 1 }).subscribe({
+      next: (itemActualizado) => {
+        this.procesandoProductoId.set(null);
+        this.reemplazarItem(itemActualizado);
+      },
       error: (error) => {
-        this.errorMensaje.set(error?.error?.message ?? 'No se pudo quitar el producto');
+        this.procesandoProductoId.set(null);
+        this.errorMensaje.set(error?.error?.message ?? 'No se pudo actualizar la cantidad');
+      },
+    });
+  }
+
+  onNotaInput(productoId: string, valor: string): void {
+    this.notasDraft.update((draft) => ({ ...draft, [productoId]: valor }));
+  }
+
+  onGuardarNota(producto: Producto): void {
+    const item = this.itemPorProducto(producto.id);
+    const valor = this.notasDraft()[producto.id];
+    if (!item || valor === undefined || valor === (item.notas ?? '')) {
+      return;
+    }
+    this.pedidoService.actualizarItem(item.id, { notas: valor }).subscribe({
+      next: (itemActualizado) => this.reemplazarItem(itemActualizado),
+      error: (error) => {
+        this.errorMensaje.set(error?.error?.message ?? 'No se pudo guardar la nota');
       },
     });
   }
@@ -133,6 +166,13 @@ export class PedidoPage {
 
   onVolver(): void {
     this.router.navigateByUrl('/');
+  }
+
+  private reemplazarItem(item: PedidoItem): void {
+    this.items.update((items) => {
+      const existe = items.some((actual) => actual.id === item.id);
+      return existe ? items.map((actual) => (actual.id === item.id ? item : actual)) : [...items, item];
+    });
   }
 
   private cargarTodo(): void {

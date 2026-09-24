@@ -18,41 +18,6 @@
 
     @if (cargando()) {
       <p class="text-sm text-gray-500">Cargando…</p>
-    } @else if (vista() === 'cantidad' && productoSeleccionado(); as producto) {
-      <div class="flex flex-col gap-4">
-        <h2 class="text-lg font-semibold">{{ producto.nombre }}</h2>
-        <p class="text-sm text-gray-500">${{ producto.precio }} c/u</p>
-
-        <div class="flex flex-col gap-1.5">
-          <label class="text-sm" for="cantidad">Cantidad</label>
-          <ui-input
-            id="cantidad"
-            type="tel"
-            inputmode="numeric"
-            [ngModel]="cantidad()"
-            (ngModelChange)="cantidad.set($event)"
-          />
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <label class="text-sm" for="notas">Notas (opcional)</label>
-          <ui-input
-            id="notas"
-            placeholder="Ej. sin cebolla"
-            [ngModel]="notas()"
-            (ngModelChange)="notas.set($event)"
-          />
-        </div>
-
-        <div class="flex gap-3">
-          <ui-button variant="secondary" [fullWidth]="true" (pressed)="onCancelarCantidad()">
-            Cancelar
-          </ui-button>
-          <ui-button [fullWidth]="true" [loading]="agregando()" (pressed)="onAgregar()">
-            Agregar
-          </ui-button>
-        </div>
-      </div>
     } @else {
       <section class="mb-4">
         <div class="flex gap-2 overflow-x-auto pb-2">
@@ -71,14 +36,41 @@
 
       <section class="mb-6 flex flex-col gap-2">
         @for (producto of productosDeCategoria(); track producto.id) {
-          <button
-            type="button"
-            class="flex items-center justify-between border border-gray-300 p-3 text-left"
-            (click)="onSeleccionarProducto(producto)"
-          >
-            <span class="text-sm">{{ producto.nombre }}</span>
-            <span class="text-sm text-gray-500">${{ producto.precio }}</span>
-          </button>
+          <div class="border border-gray-300 p-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm">{{ producto.nombre }}</span>
+              <span class="text-sm text-gray-500">${{ producto.precio }}</span>
+            </div>
+
+            <div class="mt-2 flex items-center gap-3">
+              <button
+                type="button"
+                class="h-9 w-9 border border-gray-300 text-lg disabled:opacity-40"
+                [disabled]="cantidadDe(producto.id) === 0"
+                (click)="onDecrementar(producto)"
+              >
+                −
+              </button>
+              <span class="w-6 text-center text-sm font-semibold">{{ cantidadDe(producto.id) }}</span>
+              <button
+                type="button"
+                class="h-9 w-9 border border-gray-300 text-lg"
+                (click)="onIncrementar(producto)"
+              >
+                +
+              </button>
+            </div>
+
+            @if (cantidadDe(producto.id) > 0) {
+              <ui-input
+                class="mt-2 block"
+                placeholder="Notas (opcional)"
+                [ngModel]="notaDe(producto.id)"
+                (ngModelChange)="onNotaInput(producto.id, $event)"
+                (blur)="onGuardarNota(producto)"
+              />
+            }
+          </div>
         } @empty {
           <p class="text-sm text-gray-400">No hay productos en esta categoría.</p>
         }
@@ -90,9 +82,7 @@
           @for (item of items(); track item.id) {
             <div class="flex items-center justify-between border border-gray-300 p-3">
               <span class="text-sm">{{ item.cantidad }}x {{ nombreProducto(item.productoId) }}</span>
-              <button type="button" class="text-sm text-red-600" (click)="onQuitarItem(item)">
-                Quitar
-              </button>
+              <span class="text-sm text-gray-500">${{ item.cantidad * item.precioUnitario }}</span>
             </div>
           } @empty {
             <p class="text-sm text-gray-400">Todavía no has agregado nada.</p>

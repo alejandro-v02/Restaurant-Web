@@ -10,6 +10,11 @@ export interface AgregarItemInput {
   notas?: string;
 }
 
+export interface ActualizarItemInput {
+  cantidad?: number;
+  notas?: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class PedidoService {
   private readonly http = inject(HttpClient);
@@ -24,6 +29,10 @@ export class PedidoService {
 
   agregarItem(pedidoId: string, input: AgregarItemInput): Observable<PedidoItem> {
     return this.http.post<PedidoItem>(`${API_BASE_URL}/pedidos/${pedidoId}/items`, input);
+  }
+
+  actualizarItem(itemId: string, input: ActualizarItemInput): Observable<PedidoItem> {
+    return this.http.patch<PedidoItem>(`${API_BASE_URL}/pedidos/items/${itemId}`, input);
   }
 
   eliminarItem(itemId: string): Observable<void> {
