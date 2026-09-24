@@ -6,7 +6,6 @@ import { LogoAtom } from '../../atoms/logo/logo';
   standalone: true,
   imports: [LogoAtom],
   templateUrl: './auth-layout.html',
-  styleUrl: './auth-layout.scss',
 })
 export class AuthLayoutTemplate {
   readonly title = input.required<string>();

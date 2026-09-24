@@ -1,0 +1,12 @@
+<div class="min-h-screen bg-slate-50">
+  <header class="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-3">
+    <ui-logo />
+    <div class="flex items-center gap-4">
+      <span class="text-sm text-slate-600">{{ usuario()?.nombre }}</span>
+      <ui-button variant="secondary" (pressed)="onLogout()">Salir</ui-button>
+    </div>
+  </header>
+  <main class="p-6">
+    <router-outlet />
+  </main>
+</div>

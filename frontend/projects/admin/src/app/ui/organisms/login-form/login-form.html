@@ -1,6 +1,8 @@
-<form class="ui-login-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+<form class="flex flex-col" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
   @if (errorMessage()) {
-    <p class="ui-login-form__alert" role="alert">{{ errorMessage() }}</p>
+    <p class="mb-4 rounded-md bg-red-50 px-3 py-2.5 text-sm text-red-600" role="alert">
+      {{ errorMessage() }}
+    </p>
   }
 
   <ui-form-field label="Correo electrónico" inputId="login-email" [errorMessage]="emailError">
@@ -11,7 +13,7 @@
     <ui-input id="login-password" type="password" formControlName="password" autocomplete="current-password" />
   </ui-form-field>
 
-  <ui-button type="submit" [loading]="loading()">
+  <ui-button type="submit" [fullWidth]="true" [loading]="loading()">
     {{ loading() ? 'Ingresando…' : 'Ingresar' }}
   </ui-button>
 </form>

@@ -14,7 +14,6 @@ export interface LoginCredentials {
   standalone: true,
   imports: [ReactiveFormsModule, ButtonAtom, InputAtom, FormFieldMolecule],
   templateUrl: './login-form.html',
-  styleUrl: './login-form.scss',
 })
 export class LoginFormOrganism {
   private readonly fb = inject(FormBuilder);

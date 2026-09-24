@@ -4,7 +4,6 @@ import { Component, input } from '@angular/core';
   selector: 'ui-form-field',
   standalone: true,
   templateUrl: './form-field.html',
-  styleUrl: './form-field.scss',
 })
 export class FormFieldMolecule {
   readonly label = input.required<string>();
