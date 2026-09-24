@@ -1,11 +1,11 @@
-<div class="ui-auth-layout">
-  <div class="ui-auth-layout__card">
-    <div class="ui-auth-layout__logo">
+<div class="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+  <div class="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-900/5">
+    <div class="mb-6">
       <ui-logo />
     </div>
-    <h1 class="ui-auth-layout__title">{{ title() }}</h1>
+    <h1 class="mb-1 text-xl font-semibold text-slate-900">{{ title() }}</h1>
     @if (subtitle()) {
-      <p class="ui-auth-layout__subtitle">{{ subtitle() }}</p>
+      <p class="mb-6 text-sm text-slate-500">{{ subtitle() }}</p>
     }
     <ng-content />
   </div>

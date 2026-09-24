@@ -29,7 +29,7 @@
                 "input": "projects/admin/public"
               }
             ],
-            "styles": ["projects/admin/src/styles.scss"]
+            "styles": ["projects/admin/src/styles.css"]
           },
           "configurations": {
             "production": {

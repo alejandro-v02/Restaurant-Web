@@ -7,7 +7,6 @@ export type InputType = 'text' | 'email' | 'password';
   selector: 'ui-input',
   standalone: true,
   templateUrl: './input.html',
-  styleUrl: './input.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

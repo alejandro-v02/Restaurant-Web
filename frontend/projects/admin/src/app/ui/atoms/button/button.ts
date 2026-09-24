@@ -7,13 +7,13 @@ export type ButtonType = 'button' | 'submit';
   selector: 'ui-button',
   standalone: true,
   templateUrl: './button.html',
-  styleUrl: './button.scss',
 })
 export class ButtonAtom {
   readonly variant = input<ButtonVariant>('primary');
   readonly type = input<ButtonType>('button');
   readonly disabled = input(false);
   readonly loading = input(false);
+  readonly fullWidth = input(false);
   readonly pressed = output<void>();
 
   onClick(): void {
