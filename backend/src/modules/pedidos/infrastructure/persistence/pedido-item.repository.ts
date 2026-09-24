@@ -23,4 +23,8 @@ export class TypeOrmPedidoItemRepository implements PedidoItemRepository {
   save(item: PedidoItem): Promise<PedidoItem> {
     return this.repo.save(item);
   }
+
+  async delete(id: string): Promise<void> {
+    await this.repo.delete(id);
+  }
 }

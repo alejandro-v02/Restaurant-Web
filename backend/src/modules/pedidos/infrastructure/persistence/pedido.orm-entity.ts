@@ -10,6 +10,7 @@ export const PedidoOrmEntity = new EntitySchema<Pedido>({
     mesaId: { type: 'uuid', name: 'mesa_id' },
     meseroId: { type: 'uuid', name: 'mesero_id' },
     clienteId: { type: 'uuid', name: 'cliente_id', nullable: true },
+    personas: { type: 'int', default: 1 },
     estado: { type: 'enum', enum: EstadoPedido, default: EstadoPedido.ABIERTO },
     createdAt: { type: 'timestamptz', name: 'created_at', createDate: true },
     updatedAt: { type: 'timestamptz', name: 'updated_at', updateDate: true },

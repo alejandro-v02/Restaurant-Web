@@ -11,6 +11,7 @@ export class Pedido {
   mesaId!: string;
   meseroId!: string;
   clienteId?: string;
+  personas!: number;
   estado: EstadoPedido = EstadoPedido.ABIERTO;
   createdAt!: Date;
   updatedAt!: Date;
