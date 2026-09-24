@@ -1,8 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MesaService } from '../../core/mesas/mesa.service';
 import { Mesa } from '../../core/mesas/mesa.models';
 import { AuthService } from '../../core/auth/auth.service';
+import { PedidoService } from '../../core/pedidos/pedido.service';
 import { ButtonAtom } from '../../ui/atoms/button/button';
 import { InputAtom } from '../../ui/atoms/input/input';
 
@@ -17,6 +19,8 @@ type Vista = 'lista' | 'personas';
 export class MesasPage {
   private readonly mesaService = inject(MesaService);
   private readonly authService = inject(AuthService);
+  private readonly pedidoService = inject(PedidoService);
+  private readonly router = inject(Router);
 
   readonly usuario = this.authService.usuario;
   readonly mesas = signal<Mesa[]>([]);
@@ -67,20 +71,33 @@ export class MesasPage {
     if (!mesa) {
       return;
     }
+    const personas = Number(this.personas());
     this.procesando.set(true);
     this.errorMensaje.set(null);
     this.mesaService.tomar(mesa.id).subscribe({
       next: () => {
-        this.procesando.set(false);
-        this.vista.set('lista');
-        this.mesaSeleccionada.set(null);
-        this.cargarMesas();
+        this.pedidoService.crear(mesa.id, personas).subscribe({
+          next: () => {
+            this.procesando.set(false);
+            this.router.navigate(['/pedido', mesa.id], {
+              queryParams: { numero: mesa.numero },
+            });
+          },
+          error: (error) => {
+            this.procesando.set(false);
+            this.errorMensaje.set(error?.error?.message ?? 'No se pudo crear el pedido');
+          },
+        });
       },
       error: (error) => {
         this.procesando.set(false);
         this.errorMensaje.set(error?.error?.message ?? 'No se pudo tomar la mesa');
       },
     });
+  }
+
+  onContinuarPedido(mesa: Mesa): void {
+    this.router.navigate(['/pedido', mesa.id], { queryParams: { numero: mesa.numero } });
   }
 
   onLiberar(mesa: Mesa): void {

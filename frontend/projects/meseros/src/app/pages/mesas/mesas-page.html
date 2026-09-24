@@ -50,13 +50,22 @@
           <h2 class="mb-2 text-sm text-gray-500">Tus mesas activas</h2>
           <div class="flex flex-wrap gap-2">
             @for (mesa of misMesas(); track mesa.id) {
-              <button
-                type="button"
-                class="border border-gray-900 px-3 py-2 text-sm font-semibold"
-                (click)="onLiberar(mesa)"
-              >
-                {{ mesa.numero }} ✕
-              </button>
+              <div class="flex items-center border border-gray-900">
+                <button
+                  type="button"
+                  class="px-3 py-2 text-sm font-semibold"
+                  (click)="onContinuarPedido(mesa)"
+                >
+                  {{ mesa.numero }}
+                </button>
+                <button
+                  type="button"
+                  class="border-l border-gray-900 px-2 py-2 text-sm text-gray-500"
+                  (click)="onLiberar(mesa)"
+                >
+                  ✕
+                </button>
+              </div>
             }
           </div>
         </section>
