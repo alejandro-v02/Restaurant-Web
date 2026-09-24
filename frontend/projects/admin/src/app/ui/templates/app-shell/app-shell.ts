@@ -36,7 +36,7 @@ export class AppShellTemplate {
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
       map(() => this.obtenerTituloActual()),
-      startWith(this.obtenerTituloActual()),
+      startWith(''),
     ),
     { initialValue: '' },
   );
@@ -50,6 +50,6 @@ export class AppShellTemplate {
     while (route?.firstChild) {
       route = route.firstChild;
     }
-    return route?.snapshot.data['title'] ?? '';
+    return route?.snapshot?.data?.['title'] ?? '';
   }
 }
