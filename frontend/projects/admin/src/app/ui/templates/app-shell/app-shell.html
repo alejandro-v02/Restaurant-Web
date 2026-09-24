@@ -1,12 +1,16 @@
-<div class="min-h-screen">
-  <header class="flex items-center justify-between border-b border-gray-300 px-6 py-3">
-    <ui-logo />
-    <div class="flex items-center gap-4">
-      <span class="text-sm">{{ usuario()?.nombre }}</span>
-      <ui-button variant="secondary" (pressed)="onLogout()">Salir</ui-button>
+<div class="flex min-h-screen">
+  <aside class="flex w-56 flex-col border-r border-gray-300 p-4">
+    <div class="mb-6">
+      <ui-logo />
     </div>
-  </header>
-  <main class="p-6">
+
+    <div class="mt-auto border-t border-gray-300 pt-4">
+      <p class="mb-2 text-sm">{{ usuario()?.nombre }}</p>
+      <ui-button variant="secondary" [fullWidth]="true" (pressed)="onLogout()">Salir</ui-button>
+    </div>
+  </aside>
+
+  <div class="flex-1 p-6">
     <router-outlet />
-  </main>
+  </div>
 </div>
