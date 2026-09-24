@@ -1,0 +1,36 @@
+<div class="flex flex-col gap-4">
+  @if (cargando()) {
+    <p class="text-sm text-gray-500">Cargando…</p>
+  } @else {
+    @for (grupo of grupos(); track grupo.mesaNumero) {
+      <section class="border border-gray-300">
+        <div class="border-b border-gray-300 px-4 py-2">
+          <h3 class="text-sm font-semibold">Mesa {{ grupo.mesaNumero }}</h3>
+        </div>
+
+        @for (item of grupo.items; track item.itemId) {
+          <div class="flex items-center justify-between border-b border-gray-300 px-4 py-2 last:border-b-0">
+            <div>
+              <span class="text-sm">{{ item.cantidad }}x {{ item.productoNombre }}</span>
+              @if (item.notas) {
+                <p class="text-xs text-gray-500">{{ item.notas }}</p>
+              }
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="border border-gray-300 px-2 py-1 text-xs">{{ item.estado }}</span>
+              <ui-button
+                variant="secondary"
+                [loading]="procesandoId() === item.itemId"
+                (pressed)="onAvanzar(item)"
+              >
+                {{ etiquetaBoton(item.estado) }}
+              </ui-button>
+            </div>
+          </div>
+        }
+      </section>
+    } @empty {
+      <p class="text-sm text-gray-400">No hay pedidos pendientes en cocina.</p>
+    }
+  }
+</div>
