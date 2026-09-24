@@ -1,9 +1,9 @@
 export type TipoImpuesto = 'IVA_19' | 'INC_8' | 'EXCLUIDO';
 
 export const TIPOS_IMPUESTO: { value: TipoImpuesto; label: string }[] = [
+  { value: 'EXCLUIDO', label: 'Excluido' },
   { value: 'IVA_19', label: 'IVA 19%' },
   { value: 'INC_8', label: 'INC 8%' },
-  { value: 'EXCLUIDO', label: 'Excluido' },
 ];
 
 export interface Categoria {

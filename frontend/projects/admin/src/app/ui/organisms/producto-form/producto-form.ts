@@ -30,7 +30,7 @@ export class ProductoFormOrganism {
     categoriaId: ['', [Validators.required]],
     nombre: ['', [Validators.required]],
     precio: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-    tipoImpuesto: ['IVA_19' as TipoImpuesto, [Validators.required]],
+    tipoImpuesto: ['EXCLUIDO' as TipoImpuesto, [Validators.required]],
   });
 
   onSubmit(): void {
@@ -45,6 +45,6 @@ export class ProductoFormOrganism {
       precio: Number(raw.precio),
       tipoImpuesto: raw.tipoImpuesto,
     });
-    this.form.reset({ categoriaId: '', nombre: '', precio: '', tipoImpuesto: 'IVA_19' });
+    this.form.reset({ categoriaId: '', nombre: '', precio: '', tipoImpuesto: 'EXCLUIDO' });
   }
 }
