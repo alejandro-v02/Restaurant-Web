@@ -9,6 +9,7 @@ import { PEDIDO_ITEM_REPOSITORY } from './domain/ports/pedido-item.repository.po
 import { PedidosController } from './infrastructure/http/pedidos.controller';
 import { CrearPedidoUseCase } from './application/crear-pedido.use-case';
 import { AgregarItemPedidoUseCase } from './application/agregar-item-pedido.use-case';
+import { ActualizarItemPedidoUseCase } from './application/actualizar-item-pedido.use-case';
 import { EliminarItemPedidoUseCase } from './application/eliminar-item-pedido.use-case';
 import { EnviarPedidoCocinaUseCase } from './application/enviar-pedido-cocina.use-case';
 import { ObtenerPedidoActivoUseCase } from './application/obtener-pedido-activo.use-case';
@@ -27,6 +28,7 @@ import { CatalogoModule } from '../catalogo/catalogo.module';
     { provide: PEDIDO_ITEM_REPOSITORY, useClass: TypeOrmPedidoItemRepository },
     CrearPedidoUseCase,
     AgregarItemPedidoUseCase,
+    ActualizarItemPedidoUseCase,
     EliminarItemPedidoUseCase,
     EnviarPedidoCocinaUseCase,
     ObtenerPedidoActivoUseCase,
