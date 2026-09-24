@@ -4,7 +4,12 @@
     <div class="flex items-center justify-between">
       <h1 class="text-lg font-semibold">Mesa {{ numero }}</h1>
       @if (pedido(); as pedidoActual) {
-        <span class="text-sm text-gray-500">{{ pedidoActual.personas }} personas</span>
+        <div class="flex items-center gap-2">
+          <span class="border border-gray-300 px-2 py-1 text-xs">
+            {{ pedidoActual.estado === 'ENVIADO_COCINA' ? '🔥 En cocina' : '📝 Tomando pedido' }}
+          </span>
+          <span class="text-sm text-gray-500">{{ pedidoActual.personas }} personas</span>
+        </div>
       }
     </div>
   </header>
@@ -59,6 +64,9 @@
               >
                 +
               </button>
+              @if (confirmadoProductoId() === producto.id) {
+                <span class="text-xs text-green-700">✓ agregado</span>
+              }
             </div>
 
             @if (cantidadDe(producto.id) > 0) {

@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { MesaService } from '../../core/mesas/mesa.service';
 import { Mesa } from '../../core/mesas/mesa.models';
 import { AuthService } from '../../core/auth/auth.service';
@@ -31,6 +32,8 @@ export class MesasPage {
   readonly vista = signal<Vista>('lista');
   readonly mesaSeleccionada = signal<Mesa | null>(null);
   readonly personas = signal('');
+
+  readonly estadoPedidoPorMesa = signal<Record<string, string>>({});
 
   readonly misMesas = computed(() =>
     this.mesas().filter((mesa) => mesa.meseroId === this.usuario()?.id),
@@ -125,10 +128,32 @@ export class MesasPage {
       next: (mesas) => {
         this.mesas.set(mesas);
         this.cargando.set(false);
+        this.cargarEstadosPedidos();
       },
       error: () => {
         this.cargando.set(false);
         this.errorMensaje.set('No se pudieron cargar las mesas');
+      },
+    });
+  }
+
+  private cargarEstadosPedidos(): void {
+    const mias = this.misMesas();
+    if (mias.length === 0) {
+      this.estadoPedidoPorMesa.set({});
+      return;
+    }
+
+    forkJoin(mias.map((mesa) => this.pedidoService.obtenerPorMesa(mesa.id))).subscribe({
+      next: (resultados) => {
+        const mapa: Record<string, string> = {};
+        mias.forEach((mesa, indice) => {
+          const activo = resultados[indice];
+          if (activo) {
+            mapa[mesa.id] = activo.pedido.estado;
+          }
+        });
+        this.estadoPedidoPorMesa.set(mapa);
       },
     });
   }

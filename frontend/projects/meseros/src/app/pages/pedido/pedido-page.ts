@@ -34,6 +34,8 @@ export class PedidoPage {
   readonly procesandoProductoId = signal<string | null>(null);
   readonly errorMensaje = signal<string | null>(null);
   readonly notasDraft = signal<Record<string, string>>({});
+  readonly confirmadoProductoId = signal<string | null>(null);
+  private confirmacionTimeout?: ReturnType<typeof setTimeout>;
 
   readonly productosDeCategoria = computed(() => {
     const catId = this.categoriaActivaId();
@@ -85,12 +87,21 @@ export class PedidoPage {
       next: (itemActualizado) => {
         this.procesandoProductoId.set(null);
         this.reemplazarItem(itemActualizado);
+        this.mostrarConfirmacion(producto.id);
       },
       error: (error) => {
         this.procesandoProductoId.set(null);
         this.errorMensaje.set(error?.error?.message ?? 'No se pudo agregar el producto');
       },
     });
+  }
+
+  private mostrarConfirmacion(productoId: string): void {
+    this.confirmadoProductoId.set(productoId);
+    if (this.confirmacionTimeout) {
+      clearTimeout(this.confirmacionTimeout);
+    }
+    this.confirmacionTimeout = setTimeout(() => this.confirmadoProductoId.set(null), 1200);
   }
 
   onDecrementar(producto: Producto): void {
