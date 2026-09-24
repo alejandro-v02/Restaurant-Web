@@ -1,0 +1,12 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6"
+  (click)="onOverlayClick($event)"
+>
+  <div class="w-full max-w-md border border-gray-300 bg-white p-6">
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-base font-semibold">{{ titulo() }}</h2>
+      <ui-button variant="secondary" (pressed)="cerrar.emit()">Cerrar</ui-button>
+    </div>
+    <ng-content />
+  </div>
+</div>

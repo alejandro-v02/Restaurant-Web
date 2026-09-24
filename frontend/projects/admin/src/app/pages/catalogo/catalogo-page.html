@@ -1,0 +1,67 @@
+<div class="flex flex-col gap-6">
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <section class="border border-gray-300 p-4">
+      <h2 class="mb-3 text-base font-semibold">Nueva categoría</h2>
+      <ui-categoria-form [loading]="creandoCategoria()" (creada)="onCrearCategoria($event)" />
+    </section>
+
+    <section class="border border-gray-300 p-4">
+      <h2 class="mb-3 text-base font-semibold">Nuevo producto</h2>
+      <ui-producto-form
+        [categorias]="categorias()"
+        [loading]="creandoProducto()"
+        (creado)="onCrearProducto($event)"
+      />
+    </section>
+  </div>
+
+  <div class="flex flex-col gap-6">
+    @for (grupo of grupos(); track grupo.categoria.id) {
+      <section class="border border-gray-300">
+        <div class="flex items-center justify-between border-b border-gray-300 px-4 py-2">
+          <h3 class="text-sm font-semibold">
+            {{ grupo.categoria.nombre }} ({{ grupo.productos.length }})
+          </h3>
+          <ui-button variant="secondary" (pressed)="onEliminarCategoria(grupo.categoria.id)">
+            Eliminar categoría
+          </ui-button>
+        </div>
+
+        @for (producto of grupo.productos; track producto.id) {
+          <div class="flex items-center justify-between border-b border-gray-300 px-4 py-2 last:border-b-0">
+            <span class="text-sm" [class.text-gray-400]="!producto.disponible">
+              {{ producto.nombre }}
+              @if (!producto.disponible) {
+                (no disponible)
+              }
+            </span>
+            <div class="flex items-center gap-4">
+              <span class="text-sm">${{ producto.precio }}</span>
+              <ui-button variant="secondary" (pressed)="onEditarProducto(producto)">
+                Editar
+              </ui-button>
+              <ui-button variant="secondary" (pressed)="onEliminarProducto(producto.id)">
+                Eliminar
+              </ui-button>
+            </div>
+          </div>
+        } @empty {
+          <p class="px-4 py-2 text-sm text-gray-400">Sin productos en esta categoría.</p>
+        }
+      </section>
+    } @empty {
+      <p class="text-sm text-gray-400">No hay categorías todavía.</p>
+    }
+  </div>
+</div>
+
+@if (productoSeleccionado(); as producto) {
+  <ui-modal titulo="Editar producto" (cerrar)="onCerrarModal()">
+    <ui-producto-editar-form
+      [producto]="producto"
+      [categorias]="categorias()"
+      [loading]="guardandoProducto()"
+      (guardado)="onGuardarProducto(producto.id, $event)"
+    />
+  </ui-modal>
+}

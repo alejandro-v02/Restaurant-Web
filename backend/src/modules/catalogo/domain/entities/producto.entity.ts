@@ -10,7 +10,7 @@ export class Producto {
   nombre!: string;
   descripcion?: string;
   precio!: number;
-  tipoImpuesto: TipoImpuesto = TipoImpuesto.IVA_19;
+  tipoImpuesto: TipoImpuesto = TipoImpuesto.EXCLUIDO;
   disponible: boolean = true;
   createdAt!: Date;
   updatedAt!: Date;

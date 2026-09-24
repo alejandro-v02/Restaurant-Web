@@ -1,11 +1,12 @@
-<input
+<select
   class="w-full border border-gray-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:bg-gray-100"
   [id]="id()"
-  [type]="type()"
-  [placeholder]="placeholder()"
-  [autocomplete]="autocomplete()"
   [disabled]="disabled"
   [value]="value"
-  (input)="handleInput($event)"
+  (change)="handleChange($event)"
   (blur)="handleBlur()"
-/>
+>
+  @for (option of options(); track option.value) {
+    <option [value]="option.value">{{ option.label }}</option>
+  }
+</select>

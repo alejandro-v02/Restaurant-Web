@@ -23,7 +23,7 @@ export const ProductoOrmEntity = new EntitySchema<Producto>({
       type: 'enum',
       name: 'tipo_impuesto',
       enum: TipoImpuesto,
-      default: TipoImpuesto.IVA_19,
+      default: TipoImpuesto.EXCLUIDO,
     },
     disponible: { type: 'boolean', default: true },
     createdAt: { type: 'timestamptz', name: 'created_at', createDate: true },

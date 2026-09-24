@@ -1,0 +1,8 @@
+<form class="flex items-end gap-3" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <div class="flex-1">
+    <ui-form-field label="Nueva categoría" inputId="categoria-nombre">
+      <ui-input id="categoria-nombre" formControlName="nombre" placeholder="Ej. Postres" />
+    </ui-form-field>
+  </div>
+  <ui-button type="submit" [loading]="loading()">Agregar</ui-button>
+</form>

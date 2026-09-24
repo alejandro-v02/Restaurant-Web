@@ -1,18 +1,14 @@
 <button
-  class="inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+  class="inline-flex items-center justify-center gap-2 border border-gray-300 px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60"
   [class.w-full]="fullWidth()"
-  [class]="
-    variant() === 'primary'
-      ? 'bg-orange-600 text-white hover:bg-orange-700'
-      : 'border border-slate-200 bg-transparent text-orange-600 hover:bg-slate-50'
-  "
+  [class.font-semibold]="variant() === 'primary'"
   [type]="type()"
   [disabled]="disabled() || loading()"
   (click)="onClick()"
 >
   @if (loading()) {
     <span
-      class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/50 border-t-white"
+      class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600"
       aria-hidden="true"
     ></span>
   }

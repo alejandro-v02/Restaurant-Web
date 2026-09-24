@@ -1,12 +1,40 @@
-<div class="min-h-screen bg-slate-50">
-  <header class="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-3">
-    <ui-logo />
-    <div class="flex items-center gap-4">
-      <span class="text-sm text-slate-600">{{ usuario()?.nombre }}</span>
-      <ui-button variant="secondary" (pressed)="onLogout()">Salir</ui-button>
+<div class="flex h-screen overflow-hidden">
+  <aside class="flex w-56 flex-col overflow-y-auto border-r border-gray-300 p-4">
+    <div class="mb-6">
+      <ui-logo />
     </div>
-  </header>
-  <main class="p-6">
-    <router-outlet />
-  </main>
+
+    <nav class="flex flex-col gap-1">
+      @for (item of navItems(); track item.path) {
+        @if (item.enabled) {
+          <a
+            class="border border-gray-300 px-3 py-2 text-sm"
+            [routerLink]="item.path"
+            routerLinkActive="font-semibold"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            {{ item.label }}
+          </a>
+        } @else {
+          <span class="border border-gray-300 px-3 py-2 text-sm text-gray-400">
+            {{ item.label }}
+          </span>
+        }
+      }
+    </nav>
+
+    <div class="mt-auto border-t border-gray-300 pt-4">
+      <p class="mb-2 text-sm">{{ usuario()?.nombre }}</p>
+      <ui-button variant="secondary" [fullWidth]="true" (pressed)="onLogout()">Salir</ui-button>
+    </div>
+  </aside>
+
+  <div class="flex flex-1 flex-col overflow-hidden">
+    <header class="shrink-0 border-b border-gray-300 p-4">
+      <h1 class="text-lg font-semibold">{{ pageTitle() }}</h1>
+    </header>
+    <main class="flex-1 overflow-y-auto p-6">
+      <router-outlet />
+    </main>
+  </div>
 </div>

@@ -1,0 +1,11 @@
+<label class="flex items-center gap-2 text-sm">
+  <input
+    type="checkbox"
+    [id]="id()"
+    [checked]="value"
+    [disabled]="disabled"
+    (change)="handleChange($event)"
+    (blur)="handleBlur()"
+  />
+  {{ label() }}
+</label>

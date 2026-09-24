@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginPage } from './pages/login/login-page';
 import { DashboardPage } from './pages/dashboard/dashboard-page';
+import { CatalogoPage } from './pages/catalogo/catalogo-page';
 import { AppShellTemplate } from './ui/templates/app-shell/app-shell';
 import { authGuard, guestGuard } from './core/auth/auth.guard';
 
@@ -10,6 +11,9 @@ export const routes: Routes = [
     path: '',
     component: AppShellTemplate,
     canActivate: [authGuard],
-    children: [{ path: '', component: DashboardPage }],
+    children: [
+      { path: '', component: DashboardPage, data: { title: 'Dashboard' } },
+      { path: 'catalogo', component: CatalogoPage, data: { title: 'Catálogo' } },
+    ],
   },
 ];

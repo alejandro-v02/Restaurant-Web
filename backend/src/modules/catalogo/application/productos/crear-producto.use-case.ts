@@ -33,7 +33,7 @@ export class CrearProductoUseCase {
       nombre: input.nombre,
       descripcion: input.descripcion,
       precio: input.precio,
-      tipoImpuesto: input.tipoImpuesto ?? TipoImpuesto.IVA_19,
+      tipoImpuesto: input.tipoImpuesto ?? TipoImpuesto.EXCLUIDO,
     });
 
     return this.productoRepository.save(producto);

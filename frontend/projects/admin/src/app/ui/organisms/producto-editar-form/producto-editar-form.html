@@ -1,0 +1,21 @@
+<form class="flex flex-col gap-3" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <ui-form-field label="Categoría" inputId="editar-categoria">
+    <ui-select id="editar-categoria" formControlName="categoriaId" [options]="opcionesCategoria()" />
+  </ui-form-field>
+
+  <ui-form-field label="Nombre" inputId="editar-nombre">
+    <ui-input id="editar-nombre" formControlName="nombre" />
+  </ui-form-field>
+
+  <ui-form-field label="Precio" inputId="editar-precio">
+    <ui-input id="editar-precio" type="text" formControlName="precio" />
+  </ui-form-field>
+
+  <ui-form-field label="Impuesto" inputId="editar-impuesto">
+    <ui-select id="editar-impuesto" formControlName="tipoImpuesto" [options]="opcionesTipoImpuesto" />
+  </ui-form-field>
+
+  <ui-checkbox id="editar-disponible" label="Disponible" formControlName="disponible" />
+
+  <ui-button type="submit" [fullWidth]="true" [loading]="loading()">Guardar cambios</ui-button>
+</form>
