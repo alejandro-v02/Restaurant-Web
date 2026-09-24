@@ -1,13 +1,18 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import {
   CatalogoService,
   CrearCategoriaInput,
   CrearProductoInput,
 } from '../../core/catalogo/catalogo.service';
-import { Categoria, Producto, TIPOS_IMPUESTO } from '../../core/catalogo/catalogo.models';
+import { Categoria, Producto } from '../../core/catalogo/catalogo.models';
 import { CategoriaFormOrganism } from '../../ui/organisms/categoria-form/categoria-form';
 import { ProductoFormOrganism } from '../../ui/organisms/producto-form/producto-form';
 import { ButtonAtom } from '../../ui/atoms/button/button';
+
+export interface GrupoCatalogo {
+  categoria: Categoria;
+  productos: Producto[];
+}
 
 @Component({
   selector: 'app-catalogo-page',
@@ -25,17 +30,16 @@ export class CatalogoPage {
   readonly errorCategorias = signal<string | null>(null);
   readonly errorProductos = signal<string | null>(null);
 
+  readonly grupos = computed<GrupoCatalogo[]>(() =>
+    this.categorias().map((categoria) => ({
+      categoria,
+      productos: this.productos().filter((producto) => producto.categoriaId === categoria.id),
+    })),
+  );
+
   constructor() {
     this.cargarCategorias();
     this.cargarProductos();
-  }
-
-  nombreCategoria(categoriaId: string): string {
-    return this.categorias().find((categoria) => categoria.id === categoriaId)?.nombre ?? '—';
-  }
-
-  etiquetaImpuesto(tipo: string): string {
-    return TIPOS_IMPUESTO.find((item) => item.value === tipo)?.label ?? tipo;
   }
 
   onCrearCategoria(input: CrearCategoriaInput): void {

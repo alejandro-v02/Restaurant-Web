@@ -1,54 +1,58 @@
-<div class="flex flex-col gap-8">
-  <section>
-    <h2 class="mb-3 text-base font-semibold">Categorías</h2>
-
-    @if (errorCategorias()) {
-      <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
-        {{ errorCategorias() }}
-      </p>
-    }
-
-    <div class="mb-4 border border-gray-300">
-      @for (categoria of categorias(); track categoria.id) {
-        <div class="flex items-center justify-between border-b border-gray-300 px-3 py-2 last:border-b-0">
-          <span class="text-sm">{{ categoria.nombre }}</span>
-          <ui-button variant="secondary" (pressed)="onEliminarCategoria(categoria.id)">Eliminar</ui-button>
-        </div>
-      } @empty {
-        <p class="px-3 py-2 text-sm text-gray-400">No hay categorías todavía.</p>
+<div class="flex flex-col gap-6">
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <section class="border border-gray-300 p-4">
+      <h2 class="mb-3 text-base font-semibold">Nueva categoría</h2>
+      @if (errorCategorias()) {
+        <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
+          {{ errorCategorias() }}
+        </p>
       }
-    </div>
+      <ui-categoria-form [loading]="creandoCategoria()" (creada)="onCrearCategoria($event)" />
+    </section>
 
-    <ui-categoria-form [loading]="creandoCategoria()" (creada)="onCrearCategoria($event)" />
-  </section>
-
-  <section>
-    <h2 class="mb-3 text-base font-semibold">Productos</h2>
-
-    @if (errorProductos()) {
-      <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
-        {{ errorProductos() }}
-      </p>
-    }
-
-    <div class="mb-4 border border-gray-300">
-      @for (producto of productos(); track producto.id) {
-        <div class="flex items-center justify-between border-b border-gray-300 px-3 py-2 last:border-b-0">
-          <span class="text-sm">
-            {{ producto.nombre }} — {{ nombreCategoria(producto.categoriaId) }} — ${{ producto.precio }} —
-            {{ etiquetaImpuesto(producto.tipoImpuesto) }}
-          </span>
-          <ui-button variant="secondary" (pressed)="onEliminarProducto(producto.id)">Eliminar</ui-button>
-        </div>
-      } @empty {
-        <p class="px-3 py-2 text-sm text-gray-400">No hay productos todavía.</p>
+    <section class="border border-gray-300 p-4">
+      <h2 class="mb-3 text-base font-semibold">Nuevo producto</h2>
+      @if (errorProductos()) {
+        <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
+          {{ errorProductos() }}
+        </p>
       }
-    </div>
+      <ui-producto-form
+        [categorias]="categorias()"
+        [loading]="creandoProducto()"
+        (creado)="onCrearProducto($event)"
+      />
+    </section>
+  </div>
 
-    <ui-producto-form
-      [categorias]="categorias()"
-      [loading]="creandoProducto()"
-      (creado)="onCrearProducto($event)"
-    />
-  </section>
+  <div class="flex flex-col gap-6">
+    @for (grupo of grupos(); track grupo.categoria.id) {
+      <section class="border border-gray-300">
+        <div class="flex items-center justify-between border-b border-gray-300 px-4 py-2">
+          <h3 class="text-sm font-semibold">
+            {{ grupo.categoria.nombre }} ({{ grupo.productos.length }})
+          </h3>
+          <ui-button variant="secondary" (pressed)="onEliminarCategoria(grupo.categoria.id)">
+            Eliminar categoría
+          </ui-button>
+        </div>
+
+        @for (producto of grupo.productos; track producto.id) {
+          <div class="flex items-center justify-between border-b border-gray-300 px-4 py-2 last:border-b-0">
+            <span class="text-sm">{{ producto.nombre }}</span>
+            <div class="flex items-center gap-4">
+              <span class="text-sm">${{ producto.precio }}</span>
+              <ui-button variant="secondary" (pressed)="onEliminarProducto(producto.id)">
+                Eliminar
+              </ui-button>
+            </div>
+          </div>
+        } @empty {
+          <p class="px-4 py-2 text-sm text-gray-400">Sin productos en esta categoría.</p>
+        }
+      </section>
+    } @empty {
+      <p class="text-sm text-gray-400">No hay categorías todavía.</p>
+    }
+  </div>
 </div>
