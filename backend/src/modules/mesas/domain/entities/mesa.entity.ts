@@ -10,7 +10,7 @@ export class Mesa {
   numero!: number;
   capacidad!: number;
   estado: EstadoMesa = EstadoMesa.LIBRE;
-  meseroId?: string;
+  meseroId?: string | null;
   createdAt!: Date;
   updatedAt!: Date;
 
