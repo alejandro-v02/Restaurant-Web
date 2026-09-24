@@ -1,5 +1,5 @@
-<div class="flex min-h-screen">
-  <aside class="flex w-56 flex-col border-r border-gray-300 p-4">
+<div class="flex h-screen overflow-hidden">
+  <aside class="flex w-56 flex-col overflow-y-auto border-r border-gray-300 p-4">
     <div class="mb-6">
       <ui-logo />
     </div>
@@ -29,11 +29,11 @@
     </div>
   </aside>
 
-  <div class="flex-1">
-    <header class="border-b border-gray-300 p-4">
+  <div class="flex flex-1 flex-col overflow-hidden">
+    <header class="shrink-0 border-b border-gray-300 p-4">
       <h1 class="text-lg font-semibold">{{ pageTitle() }}</h1>
     </header>
-    <main class="p-6">
+    <main class="flex-1 overflow-y-auto p-6">
       <router-outlet />
     </main>
   </div>
