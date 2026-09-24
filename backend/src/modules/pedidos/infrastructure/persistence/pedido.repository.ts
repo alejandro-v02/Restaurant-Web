@@ -27,6 +27,10 @@ export class TypeOrmPedidoRepository implements PedidoRepository {
     });
   }
 
+  findByEstados(estados: EstadoPedido[]): Promise<Pedido[]> {
+    return this.repo.find({ where: { estado: In(estados) } });
+  }
+
   save(pedido: Pedido): Promise<Pedido> {
     return this.repo.save(pedido);
   }

@@ -14,4 +14,8 @@ export class ActualizarCategoriaDto {
   @IsOptional()
   @IsBoolean()
   activo?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  enviarACocina?: boolean;
 }

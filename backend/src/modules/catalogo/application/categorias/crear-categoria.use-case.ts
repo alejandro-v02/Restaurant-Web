@@ -6,6 +6,7 @@ import { Categoria } from '../../domain/entities/categoria.entity';
 export interface CrearCategoriaInput {
   nombre: string;
   orden?: number;
+  enviarACocina?: boolean;
 }
 
 @Injectable()
@@ -16,7 +17,11 @@ export class CrearCategoriaUseCase {
   ) {}
 
   execute(input: CrearCategoriaInput): Promise<Categoria> {
-    const categoria = new Categoria({ nombre: input.nombre, orden: input.orden ?? 0 });
+    const categoria = new Categoria({
+      nombre: input.nombre,
+      orden: input.orden ?? 0,
+      enviarACocina: input.enviarACocina ?? true,
+    });
     return this.categoriaRepository.save(categoria);
   }
 }
