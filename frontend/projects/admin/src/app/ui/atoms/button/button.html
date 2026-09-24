@@ -1,0 +1,11 @@
+<button
+  class="ui-button ui-button--{{ variant() }}"
+  [type]="type()"
+  [disabled]="disabled() || loading()"
+  (click)="onClick()"
+>
+  @if (loading()) {
+    <span class="ui-button__spinner" aria-hidden="true"></span>
+  }
+  <ng-content />
+</button>

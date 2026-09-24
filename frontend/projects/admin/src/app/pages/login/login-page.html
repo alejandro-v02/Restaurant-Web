@@ -1,0 +1,7 @@
+<ui-auth-layout title="Ember Restaurant" subtitle="Inicia sesión para continuar">
+  <ui-login-form
+    [loading]="loading()"
+    [errorMessage]="errorMessage()"
+    (submitted)="onSubmit($event)"
+  />
+</ui-auth-layout>

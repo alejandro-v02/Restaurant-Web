@@ -1,0 +1,7 @@
+<div class="ui-form-field">
+  <label class="ui-form-field__label" [for]="inputId()">{{ label() }}</label>
+  <ng-content />
+  @if (errorMessage()) {
+    <p class="ui-form-field__error" role="alert">{{ errorMessage() }}</p>
+  }
+</div>

@@ -1,0 +1,18 @@
+.ui-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.ui-form-field__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.ui-form-field__error {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-error);
+}

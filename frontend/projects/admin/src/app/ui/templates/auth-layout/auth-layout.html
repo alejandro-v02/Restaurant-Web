@@ -1,0 +1,12 @@
+<div class="ui-auth-layout">
+  <div class="ui-auth-layout__card">
+    <div class="ui-auth-layout__logo">
+      <ui-logo />
+    </div>
+    <h1 class="ui-auth-layout__title">{{ title() }}</h1>
+    @if (subtitle()) {
+      <p class="ui-auth-layout__subtitle">{{ subtitle() }}</p>
+    }
+    <ng-content />
+  </div>
+</div>
