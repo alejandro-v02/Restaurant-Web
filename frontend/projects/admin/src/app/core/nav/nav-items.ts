@@ -9,7 +9,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Dashboard', path: '/', roles: ['ADMIN', 'CAJERO', 'COCINA'], enabled: true },
-  { label: 'Catálogo', path: '/catalogo', roles: ['ADMIN'], enabled: false },
+  { label: 'Catálogo', path: '/catalogo', roles: ['ADMIN'], enabled: true },
   { label: 'Mesas', path: '/mesas', roles: ['ADMIN', 'CAJERO'], enabled: false },
   { label: 'Usuarios', path: '/usuarios', roles: ['ADMIN'], enabled: false },
   { label: 'Pedidos', path: '/pedidos', roles: ['CAJERO'], enabled: false },

@@ -1,0 +1,54 @@
+<div class="flex flex-col gap-8">
+  <section>
+    <h2 class="mb-3 text-base font-semibold">Categorías</h2>
+
+    @if (errorCategorias()) {
+      <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
+        {{ errorCategorias() }}
+      </p>
+    }
+
+    <div class="mb-4 border border-gray-300">
+      @for (categoria of categorias(); track categoria.id) {
+        <div class="flex items-center justify-between border-b border-gray-300 px-3 py-2 last:border-b-0">
+          <span class="text-sm">{{ categoria.nombre }}</span>
+          <ui-button variant="secondary" (pressed)="onEliminarCategoria(categoria.id)">Eliminar</ui-button>
+        </div>
+      } @empty {
+        <p class="px-3 py-2 text-sm text-gray-400">No hay categorías todavía.</p>
+      }
+    </div>
+
+    <ui-categoria-form [loading]="creandoCategoria()" (creada)="onCrearCategoria($event)" />
+  </section>
+
+  <section>
+    <h2 class="mb-3 text-base font-semibold">Productos</h2>
+
+    @if (errorProductos()) {
+      <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
+        {{ errorProductos() }}
+      </p>
+    }
+
+    <div class="mb-4 border border-gray-300">
+      @for (producto of productos(); track producto.id) {
+        <div class="flex items-center justify-between border-b border-gray-300 px-3 py-2 last:border-b-0">
+          <span class="text-sm">
+            {{ producto.nombre }} — {{ nombreCategoria(producto.categoriaId) }} — ${{ producto.precio }} —
+            {{ etiquetaImpuesto(producto.tipoImpuesto) }}
+          </span>
+          <ui-button variant="secondary" (pressed)="onEliminarProducto(producto.id)">Eliminar</ui-button>
+        </div>
+      } @empty {
+        <p class="px-3 py-2 text-sm text-gray-400">No hay productos todavía.</p>
+      }
+    </div>
+
+    <ui-producto-form
+      [categorias]="categorias()"
+      [loading]="creandoProducto()"
+      (creado)="onCrearProducto($event)"
+    />
+  </section>
+</div>

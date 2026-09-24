@@ -1,0 +1,12 @@
+<select
+  class="w-full border border-gray-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:bg-gray-100"
+  [id]="id()"
+  [disabled]="disabled"
+  [value]="value"
+  (change)="handleChange($event)"
+  (blur)="handleBlur()"
+>
+  @for (option of options(); track option.value) {
+    <option [value]="option.value">{{ option.label }}</option>
+  }
+</select>
