@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, map, startWith } from 'rxjs';
 import { LogoAtom } from '../../atoms/logo/logo';
 import { ButtonAtom } from '../../atoms/button/button';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -12,10 +14,29 @@ import { AuthService } from '../../../core/auth/auth.service';
 })
 export class AppShellTemplate {
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
   readonly usuario = this.authService.usuario;
 
+  readonly pageTitle = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map(() => this.obtenerTituloActual()),
+      startWith(this.obtenerTituloActual()),
+    ),
+    { initialValue: '' },
+  );
+
   onLogout(): void {
     this.authService.logout();
+  }
+
+  private obtenerTituloActual(): string {
+    let route = this.activatedRoute.firstChild;
+    while (route?.firstChild) {
+      route = route.firstChild;
+    }
+    return route?.snapshot.data['title'] ?? '';
   }
 }

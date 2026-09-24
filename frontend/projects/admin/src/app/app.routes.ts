@@ -10,6 +10,6 @@ export const routes: Routes = [
     path: '',
     component: AppShellTemplate,
     canActivate: [authGuard],
-    children: [{ path: '', component: DashboardPage }],
+    children: [{ path: '', component: DashboardPage, data: { title: 'Dashboard' } }],
   },
 ];

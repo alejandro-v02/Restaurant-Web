@@ -10,7 +10,12 @@
     </div>
   </aside>
 
-  <div class="flex-1 p-6">
-    <router-outlet />
+  <div class="flex-1">
+    <header class="border-b border-gray-300 p-4">
+      <h1 class="text-lg font-semibold">{{ pageTitle() }}</h1>
+    </header>
+    <main class="p-6">
+      <router-outlet />
+    </main>
   </div>
 </div>
