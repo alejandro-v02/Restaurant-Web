@@ -2,21 +2,11 @@
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
     <section class="border border-gray-300 p-4">
       <h2 class="mb-3 text-base font-semibold">Nueva categoría</h2>
-      @if (errorCategorias()) {
-        <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
-          {{ errorCategorias() }}
-        </p>
-      }
       <ui-categoria-form [loading]="creandoCategoria()" (creada)="onCrearCategoria($event)" />
     </section>
 
     <section class="border border-gray-300 p-4">
       <h2 class="mb-3 text-base font-semibold">Nuevo producto</h2>
-      @if (errorProductos()) {
-        <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
-          {{ errorProductos() }}
-        </p>
-      }
       <ui-producto-form
         [categorias]="categorias()"
         [loading]="creandoProducto()"
@@ -67,11 +57,6 @@
 
 @if (productoSeleccionado(); as producto) {
   <ui-modal titulo="Editar producto" (cerrar)="onCerrarModal()">
-    @if (errorEditar()) {
-      <p class="mb-3 border border-gray-300 p-2 text-sm text-red-600" role="alert">
-        {{ errorEditar() }}
-      </p>
-    }
     <ui-producto-editar-form
       [producto]="producto"
       [categorias]="categorias()"

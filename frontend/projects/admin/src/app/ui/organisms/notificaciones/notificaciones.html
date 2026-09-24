@@ -1,0 +1,17 @@
+<div class="fixed inset-x-0 bottom-0 z-50 flex flex-col items-center gap-2 p-4">
+  @for (notificacion of notificaciones(); track notificacion.id) {
+    <div
+      class="flex w-full max-w-xl items-center justify-between border border-gray-300 bg-white px-4 py-3 text-sm"
+      [class.text-red-600]="notificacion.tipo === 'error'"
+    >
+      <span>{{ notificacion.mensaje }}</span>
+      <button
+        type="button"
+        class="ml-4 text-gray-400"
+        (click)="cerrar(notificacion.id)"
+      >
+        ✕
+      </button>
+    </div>
+  }
+</div>

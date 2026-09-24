@@ -6,6 +6,7 @@ import {
   CrearProductoInput,
 } from '../../core/catalogo/catalogo.service';
 import { Categoria, Producto } from '../../core/catalogo/catalogo.models';
+import { NotificacionService } from '../../core/notificaciones/notificacion.service';
 import { CategoriaFormOrganism } from '../../ui/organisms/categoria-form/categoria-form';
 import { ProductoFormOrganism } from '../../ui/organisms/producto-form/producto-form';
 import { ProductoEditarFormOrganism } from '../../ui/organisms/producto-editar-form/producto-editar-form';
@@ -25,15 +26,13 @@ export interface GrupoCatalogo {
 })
 export class CatalogoPage {
   private readonly catalogoService = inject(CatalogoService);
+  private readonly notificacionService = inject(NotificacionService);
 
   readonly categorias = signal<Categoria[]>([]);
   readonly productos = signal<Producto[]>([]);
   readonly creandoCategoria = signal(false);
   readonly creandoProducto = signal(false);
   readonly guardandoProducto = signal(false);
-  readonly errorCategorias = signal<string | null>(null);
-  readonly errorProductos = signal<string | null>(null);
-  readonly errorEditar = signal<string | null>(null);
   readonly productoSeleccionado = signal<Producto | null>(null);
 
   readonly grupos = computed<GrupoCatalogo[]>(() =>
@@ -50,56 +49,59 @@ export class CatalogoPage {
 
   onCrearCategoria(input: CrearCategoriaInput): void {
     this.creandoCategoria.set(true);
-    this.errorCategorias.set(null);
     this.catalogoService.crearCategoria(input).subscribe({
       next: () => {
         this.creandoCategoria.set(false);
+        this.notificacionService.exito(`Categoría "${input.nombre}" creada`);
         this.cargarCategorias();
       },
-      error: () => {
+      error: (error) => {
         this.creandoCategoria.set(false);
-        this.errorCategorias.set('No se pudo crear la categoría');
+        this.notificacionService.error(error?.error?.message ?? 'No se pudo crear la categoría');
       },
     });
   }
 
   onEliminarCategoria(id: string): void {
-    this.errorCategorias.set(null);
     this.catalogoService.eliminarCategoria(id).subscribe({
-      next: () => this.cargarCategorias(),
+      next: () => {
+        this.notificacionService.exito('Categoría eliminada');
+        this.cargarCategorias();
+      },
       error: (error) => {
-        this.errorCategorias.set(error?.error?.message ?? 'No se pudo eliminar la categoría');
+        this.notificacionService.error(error?.error?.message ?? 'No se pudo eliminar la categoría');
       },
     });
   }
 
   onCrearProducto(input: CrearProductoInput): void {
     this.creandoProducto.set(true);
-    this.errorProductos.set(null);
     this.catalogoService.crearProducto(input).subscribe({
       next: () => {
         this.creandoProducto.set(false);
+        this.notificacionService.exito(`Producto "${input.nombre}" creado`);
         this.cargarProductos();
       },
-      error: () => {
+      error: (error) => {
         this.creandoProducto.set(false);
-        this.errorProductos.set('No se pudo crear el producto');
+        this.notificacionService.error(error?.error?.message ?? 'No se pudo crear el producto');
       },
     });
   }
 
   onEliminarProducto(id: string): void {
-    this.errorProductos.set(null);
     this.catalogoService.eliminarProducto(id).subscribe({
-      next: () => this.cargarProductos(),
+      next: () => {
+        this.notificacionService.exito('Producto eliminado');
+        this.cargarProductos();
+      },
       error: (error) => {
-        this.errorProductos.set(error?.error?.message ?? 'No se pudo eliminar el producto');
+        this.notificacionService.error(error?.error?.message ?? 'No se pudo eliminar el producto');
       },
     });
   }
 
   onEditarProducto(producto: Producto): void {
-    this.errorEditar.set(null);
     this.productoSeleccionado.set(producto);
   }
 
@@ -109,16 +111,16 @@ export class CatalogoPage {
 
   onGuardarProducto(id: string, input: ActualizarProductoInput): void {
     this.guardandoProducto.set(true);
-    this.errorEditar.set(null);
     this.catalogoService.actualizarProducto(id, input).subscribe({
       next: () => {
         this.guardandoProducto.set(false);
         this.productoSeleccionado.set(null);
+        this.notificacionService.exito('Producto actualizado');
         this.cargarProductos();
       },
       error: (error) => {
         this.guardandoProducto.set(false);
-        this.errorEditar.set(error?.error?.message ?? 'No se pudo actualizar el producto');
+        this.notificacionService.error(error?.error?.message ?? 'No se pudo actualizar el producto');
       },
     });
   }
