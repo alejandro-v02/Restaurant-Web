@@ -1,15 +1,23 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { LogoAtom } from '../../atoms/logo/logo';
 import { ButtonAtom } from '../../atoms/button/button';
 import { AuthService } from '../../../core/auth/auth.service';
+import { NAV_ITEMS } from '../../../core/nav/nav-items';
 
 @Component({
   selector: 'ui-app-shell',
   standalone: true,
-  imports: [RouterOutlet, LogoAtom, ButtonAtom],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, LogoAtom, ButtonAtom],
   templateUrl: './app-shell.html',
 })
 export class AppShellTemplate {
@@ -18,6 +26,11 @@ export class AppShellTemplate {
   private readonly activatedRoute = inject(ActivatedRoute);
 
   readonly usuario = this.authService.usuario;
+
+  readonly navItems = computed(() => {
+    const rol = this.usuario()?.rol;
+    return NAV_ITEMS.filter((item) => !rol || item.roles.includes(rol));
+  });
 
   readonly pageTitle = toSignal(
     this.router.events.pipe(

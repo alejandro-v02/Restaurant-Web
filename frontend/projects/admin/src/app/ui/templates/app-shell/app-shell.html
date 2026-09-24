@@ -4,6 +4,25 @@
       <ui-logo />
     </div>
 
+    <nav class="flex flex-col gap-1">
+      @for (item of navItems(); track item.path) {
+        @if (item.enabled) {
+          <a
+            class="border border-gray-300 px-3 py-2 text-sm"
+            [routerLink]="item.path"
+            routerLinkActive="font-semibold"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            {{ item.label }}
+          </a>
+        } @else {
+          <span class="border border-gray-300 px-3 py-2 text-sm text-gray-400">
+            {{ item.label }}
+          </span>
+        }
+      }
+    </nav>
+
     <div class="mt-auto border-t border-gray-300 pt-4">
       <p class="mb-2 text-sm">{{ usuario()?.nombre }}</p>
       <ui-button variant="secondary" [fullWidth]="true" (pressed)="onLogout()">Salir</ui-button>
