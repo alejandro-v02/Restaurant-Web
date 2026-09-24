@@ -8,6 +8,94 @@ import { ProductoOrmEntity } from '../../modules/catalogo/infrastructure/persist
 import { TipoImpuesto } from '../../modules/catalogo/domain/entities/producto.entity';
 import { MesaOrmEntity } from '../../modules/mesas/infrastructure/persistence/mesa.orm-entity';
 
+const MENU: Array<{ categoria: string; productos: Array<{ nombre: string; precio: number }> }> = [
+  {
+    categoria: 'Res-cerdo',
+    productos: [
+      { nombre: 'Llanera', precio: 35000 },
+      { nombre: 'Mamona', precio: 35000 },
+      { nombre: 'Chiguiro', precio: 35000 },
+      { nombre: 'Mixta', precio: 38000 },
+      { nombre: 'Churrasco', precio: 40000 },
+      { nombre: 'Lomo de cerdo', precio: 38000 },
+      { nombre: 'Milanesa de Cerdo', precio: 38000 },
+      { nombre: 'Costillo Ahumadas', precio: 35000 },
+      { nombre: 'Costillas BBQ', precio: 37000 },
+    ],
+  },
+  {
+    categoria: 'Pollo',
+    productos: [
+      { nombre: 'Pechuga a la Brasa', precio: 28000 },
+      { nombre: 'Pechuga Gratinada', precio: 30000 },
+      { nombre: 'Pechuga en Champiñones', precio: 32000 },
+      { nombre: 'Pechuga Hawaiana', precio: 32000 },
+      { nombre: 'Milanesa de Pollo', precio: 30000 },
+    ],
+  },
+  {
+    categoria: 'Especiales',
+    productos: [
+      { nombre: 'Casanare', precio: 38000 },
+      { nombre: 'Frijolada', precio: 28000 },
+      { nombre: 'Arroz Frutos del Mar', precio: 47000 },
+      { nombre: 'Ajiaco', precio: 25000 },
+      { nombre: 'Arroz con Pollo', precio: 25000 },
+      { nombre: 'Sancocho', precio: 45000 },
+    ],
+  },
+  {
+    categoria: 'Pescados',
+    productos: [
+      { nombre: 'Mojarra Frita', precio: 33000 },
+      { nombre: 'Trucha Frita', precio: 33000 },
+      { nombre: 'Trucha al Ajillo', precio: 38000 },
+      { nombre: 'Trucha Marinera', precio: 48000 },
+      { nombre: 'Viudo de Capaz', precio: 38000 },
+      { nombre: 'Viudo de Bocachico', precio: 38000 },
+      { nombre: 'Cazuela de Mariscos', precio: 48000 },
+      { nombre: 'Bagre Salsa', precio: 38000 },
+      { nombre: 'Bagre Dorado', precio: 38000 },
+      { nombre: 'Bagre Marinero', precio: 48000 },
+    ],
+  },
+  {
+    categoria: 'Entradas',
+    productos: [
+      { nombre: 'Chicharrón', precio: 10000 },
+      { nombre: 'Chorizo', precio: 10000 },
+      { nombre: 'Patacón con Ahogado', precio: 10000 },
+      { nombre: 'Sopa sencilla', precio: 8000 },
+    ],
+  },
+  {
+    categoria: 'Bebidas',
+    productos: [
+      { nombre: 'Gaseosa Personal', precio: 3000 },
+      { nombre: 'Gaseosa 1.5L', precio: 8000 },
+      { nombre: 'Gaseosa 3L', precio: 12000 },
+      { nombre: 'Jarra de Limonada de Panela', precio: 15000 },
+      { nombre: 'Media Jarra de Limonada de Panela', precio: 8000 },
+      { nombre: 'Vaso de Limonada de Panela', precio: 4000 },
+      { nombre: 'Jarra de Limonada Natural', precio: 15000 },
+      { nombre: 'Media Jarra de Limonada Natural', precio: 10000 },
+      { nombre: 'Vaso de Limonada Natural', precio: 6000 },
+      { nombre: 'Jarra de Jugo Natural en Agua', precio: 15000 },
+      { nombre: 'Media Jarra de Jugo en Agua', precio: 10000 },
+      { nombre: 'Jarra de Jugo en Leche', precio: 20000 },
+      { nombre: 'Media Jarra de Jugo en Leche', precio: 15000 },
+      { nombre: 'Vaso de Jugo en Leche', precio: 10000 },
+      { nombre: 'Jarra de Limonada de Coco', precio: 30000 },
+      { nombre: 'Media Jarra de Limonada de Coco', precio: 20000 },
+      { nombre: 'Limonada de Coco Personal', precio: 15000 },
+      { nombre: 'Jarra de Limonada Cerezada', precio: 28000 },
+      { nombre: 'Media Jarra de Limonada Cerezada', precio: 20000 },
+      { nombre: 'Limonada de Vino Personal', precio: 15000 },
+      { nombre: 'Agua Personal', precio: 3000 },
+    ],
+  },
+];
+
 async function seed() {
   await AppDataSource.initialize();
 
@@ -60,62 +148,28 @@ async function seed() {
     }
   }
 
-  let categoriaEntradas = await categoriaRepo.findOneBy({ nombre: 'Entradas' });
-  if (!categoriaEntradas) {
-    categoriaEntradas = await categoriaRepo.save(
-      categoriaRepo.create({ nombre: 'Entradas', orden: 1 }),
-    );
-    console.log('Categoria creada: Entradas');
-  }
+  for (const [indice, seccion] of MENU.entries()) {
+    let categoria = await categoriaRepo.findOneBy({ nombre: seccion.categoria });
+    if (!categoria) {
+      categoria = await categoriaRepo.save(
+        categoriaRepo.create({ nombre: seccion.categoria, orden: indice + 1 }),
+      );
+      console.log(`Categoria creada: ${seccion.categoria}`);
+    }
 
-  let categoriaPlatos = await categoriaRepo.findOneBy({ nombre: 'Platos fuertes' });
-  if (!categoriaPlatos) {
-    categoriaPlatos = await categoriaRepo.save(
-      categoriaRepo.create({ nombre: 'Platos fuertes', orden: 2 }),
-    );
-    console.log('Categoria creada: Platos fuertes');
-  }
-
-  let categoriaBebidas = await categoriaRepo.findOneBy({ nombre: 'Bebidas' });
-  if (!categoriaBebidas) {
-    categoriaBebidas = await categoriaRepo.save(
-      categoriaRepo.create({ nombre: 'Bebidas', orden: 3 }),
-    );
-    console.log('Categoria creada: Bebidas');
-  }
-
-  const productos = [
-    {
-      categoriaId: categoriaEntradas.id,
-      nombre: 'Patacones con hogao',
-      precio: 14000,
-      tipoImpuesto: TipoImpuesto.INC_8,
-    },
-    {
-      categoriaId: categoriaPlatos.id,
-      nombre: 'Bandeja paisa',
-      precio: 32000,
-      tipoImpuesto: TipoImpuesto.INC_8,
-    },
-    {
-      categoriaId: categoriaPlatos.id,
-      nombre: 'Sancocho de gallina',
-      precio: 28000,
-      tipoImpuesto: TipoImpuesto.INC_8,
-    },
-    {
-      categoriaId: categoriaBebidas.id,
-      nombre: 'Limonada de coco',
-      precio: 9000,
-      tipoImpuesto: TipoImpuesto.IVA_19,
-    },
-  ];
-
-  for (const data of productos) {
-    const existente = await productoRepo.findOneBy({ nombre: data.nombre });
-    if (!existente) {
-      await productoRepo.save(productoRepo.create(data));
-      console.log(`Producto creado: ${data.nombre}`);
+    for (const producto of seccion.productos) {
+      const existente = await productoRepo.findOneBy({ nombre: producto.nombre });
+      if (!existente) {
+        await productoRepo.save(
+          productoRepo.create({
+            categoriaId: categoria.id,
+            nombre: producto.nombre,
+            precio: producto.precio,
+            tipoImpuesto: TipoImpuesto.EXCLUIDO,
+          }),
+        );
+        console.log(`Producto creado: ${producto.nombre}`);
+      }
     }
   }
 
