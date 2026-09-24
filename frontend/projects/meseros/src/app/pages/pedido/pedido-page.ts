@@ -153,9 +153,9 @@ export class PedidoPage {
     this.enviando.set(true);
     this.errorMensaje.set(null);
     this.pedidoService.enviar(pedido.id).subscribe({
-      next: (pedidoActualizado) => {
+      next: () => {
         this.enviando.set(false);
-        this.pedido.set(pedidoActualizado);
+        this.router.navigateByUrl('/');
       },
       error: (error) => {
         this.enviando.set(false);
