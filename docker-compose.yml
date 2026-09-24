@@ -1,30 +1,30 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: fogon-postgres
+    container_name: ember-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: fogon
-      POSTGRES_PASSWORD: fogon
-      POSTGRES_DB: fogon_pos
+      POSTGRES_USER: ember
+      POSTGRES_PASSWORD: ember
+      POSTGRES_DB: ember_restaurant
     ports:
       - '5434:5432'
     volumes:
-      - fogon_postgres_data:/var/lib/postgresql/data
+      - ember_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U fogon -d fogon_pos']
+      test: ['CMD-SHELL', 'pg_isready -U ember -d ember_restaurant']
       interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
-    container_name: fogon-redis
+    container_name: ember-redis
     restart: unless-stopped
     ports:
       - '6379:6379'
     volumes:
-      - fogon_redis_data:/data
+      - ember_redis_data:/data
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
@@ -32,5 +32,5 @@ services:
       retries: 5
 
 volumes:
-  fogon_postgres_data:
-  fogon_redis_data:
+  ember_postgres_data:
+  ember_redis_data:

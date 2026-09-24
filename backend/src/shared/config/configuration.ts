@@ -34,9 +34,9 @@ export default registerAs(
     database: {
       host: process.env.DB_HOST ?? 'localhost',
       port: parseInt(process.env.DB_PORT ?? '5432', 10),
-      user: process.env.DB_USER ?? 'fogon',
+      user: process.env.DB_USER ?? 'ember',
       password: process.env.DB_PASSWORD ?? '',
-      name: process.env.DB_NAME ?? 'fogon_pos',
+      name: process.env.DB_NAME ?? 'ember_restaurant',
     },
     redis: {
       host: process.env.REDIS_HOST ?? 'localhost',

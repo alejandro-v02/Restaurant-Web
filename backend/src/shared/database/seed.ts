@@ -26,19 +26,19 @@ async function seed() {
   }> = [
     {
       nombre: 'Administrador',
-      email: 'admin@fogonpos.dev',
+      email: 'admin@emberrestaurant.dev',
       passwordHash: await bcrypt.hash('Admin123*', 10),
       rol: RolUsuario.ADMIN,
     },
     {
       nombre: 'Cajero Principal',
-      email: 'caja@fogonpos.dev',
+      email: 'caja@emberrestaurant.dev',
       passwordHash: await bcrypt.hash('Caja123*', 10),
       rol: RolUsuario.CAJERO,
     },
     {
       nombre: 'Cocina',
-      email: 'cocina@fogonpos.dev',
+      email: 'cocina@emberrestaurant.dev',
       passwordHash: await bcrypt.hash('Cocina123*', 10),
       rol: RolUsuario.COCINA,
     },

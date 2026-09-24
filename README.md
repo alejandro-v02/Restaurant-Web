@@ -1,4 +1,4 @@
-# 🔥 FogónPOS — Sistema para restaurantes con facturación electrónica
+# 🔥 Ember Restaurant — Sistema para restaurantes con facturación electrónica
 
 ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white)
@@ -107,7 +107,7 @@ Los módulos no comparten entidades TypeORM entre sí: cada aggregate guarda ref
 ## 📁 Estructura del repositorio
 
 ```
-fogon-pos/
+ember-restaurant/
 ├── backend/
 │   └── src/
 │       ├── modules/
@@ -152,7 +152,7 @@ npm i -g @angular/cli @nestjs/cli
 ```bash
 # 1. Clonar el repositorio
 git clone <url-del-repositorio>
-cd fogon-pos
+cd ember-restaurant
 
 # 2. Levantar PostgreSQL y Redis
 docker compose up -d
@@ -175,9 +175,9 @@ Usuarios de prueba creados por el seed:
 
 | Rol | Usuario | Contraseña / PIN |
 |---|---|---|
-| Admin | admin@fogonpos.dev | `Admin123*` |
-| Cajero | caja@fogonpos.dev | `Caja123*` |
-| Cocina | cocina@fogonpos.dev | `Cocina123*` |
+| Admin | admin@emberrestaurant.dev | `Admin123*` |
+| Cajero | caja@emberrestaurant.dev | `Caja123*` |
+| Cocina | cocina@emberrestaurant.dev | `Cocina123*` |
 | Mesero | mesero1 | PIN `1234` |
 
 ---

@@ -18,6 +18,6 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('FogónPOS Admin');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Ember Restaurant Admin');
   });
 });
