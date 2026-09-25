@@ -212,14 +212,13 @@ export class PedidoPage implements OnDestroy {
     this.entregandoItemId.set(item.id);
     this.errorMensaje.set(null);
     this.pedidoService.entregarItem(item.id, cantidad).subscribe({
-      next: ({ actualizado, entregado }) => {
+      next: () => {
         this.entregandoItemId.set(null);
         this.cantidadEntregarDraft.update((draft) => {
           const { [item.id]: _quitado, ...resto } = draft;
           return resto;
         });
-        this.reemplazarItem(actualizado);
-        this.reemplazarItem(entregado);
+        this.actualizarDesdeServidor();
       },
       error: (error) => {
         this.entregandoItemId.set(null);
@@ -239,6 +238,10 @@ export class PedidoPage implements OnDestroy {
     if (this.procesandoProductoId() || this.entregandoItemId()) {
       return;
     }
+    this.actualizarDesdeServidor();
+  }
+
+  private actualizarDesdeServidor(): void {
     this.pedidoService.obtenerPorMesa(this.mesaId).subscribe({
       next: (activo) => {
         if (activo) {
