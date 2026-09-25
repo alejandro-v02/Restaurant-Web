@@ -3,7 +3,6 @@ export class Categoria {
   nombre!: string;
   orden: number = 0;
   activo: boolean = true;
-  enviarACocina: boolean = true;
   createdAt!: Date;
   updatedAt!: Date;
 

@@ -8,16 +8,19 @@ import { ProductoOrmEntity } from '../../modules/catalogo/infrastructure/persist
 import { TipoImpuesto } from '../../modules/catalogo/domain/entities/producto.entity';
 import { MesaOrmEntity } from '../../modules/mesas/infrastructure/persistence/mesa.orm-entity';
 
-const MENU: Array<{ categoria: string; productos: Array<{ nombre: string; precio: number }> }> = [
+const MENU: Array<{
+  categoria: string;
+  productos: Array<{ nombre: string; precio: number; enviarACocina?: boolean }>;
+}> = [
   {
     categoria: 'Res-cerdo',
     productos: [
-      { nombre: 'Llanera', precio: 35000 },
-      { nombre: 'Mamona', precio: 35000 },
-      { nombre: 'Chiguiro', precio: 35000 },
-      { nombre: 'Mixta', precio: 38000 },
-      { nombre: 'Churrasco', precio: 40000 },
-      { nombre: 'Lomo de cerdo', precio: 38000 },
+      { nombre: 'Llanera', precio: 35000, enviarACocina: false },
+      { nombre: 'Mamona', precio: 35000, enviarACocina: false },
+      { nombre: 'Chiguiro', precio: 35000, enviarACocina: false },
+      { nombre: 'Mixta', precio: 38000, enviarACocina: false },
+      { nombre: 'Churrasco', precio: 40000, enviarACocina: false },
+      { nombre: 'Lomo de cerdo', precio: 38000, enviarACocina: false },
       { nombre: 'Milanesa de Cerdo', precio: 38000 },
       { nombre: 'Costillo Ahumadas', precio: 35000 },
       { nombre: 'Costillas BBQ', precio: 37000 },
@@ -71,27 +74,27 @@ const MENU: Array<{ categoria: string; productos: Array<{ nombre: string; precio
   {
     categoria: 'Bebidas',
     productos: [
-      { nombre: 'Gaseosa Personal', precio: 3000 },
-      { nombre: 'Gaseosa 1.5L', precio: 8000 },
-      { nombre: 'Gaseosa 3L', precio: 12000 },
-      { nombre: 'Jarra de Limonada de Panela', precio: 15000 },
-      { nombre: 'Media Jarra de Limonada de Panela', precio: 8000 },
-      { nombre: 'Vaso de Limonada de Panela', precio: 4000 },
-      { nombre: 'Jarra de Limonada Natural', precio: 15000 },
-      { nombre: 'Media Jarra de Limonada Natural', precio: 10000 },
-      { nombre: 'Vaso de Limonada Natural', precio: 6000 },
-      { nombre: 'Jarra de Jugo Natural en Agua', precio: 15000 },
-      { nombre: 'Media Jarra de Jugo en Agua', precio: 10000 },
-      { nombre: 'Jarra de Jugo en Leche', precio: 20000 },
-      { nombre: 'Media Jarra de Jugo en Leche', precio: 15000 },
-      { nombre: 'Vaso de Jugo en Leche', precio: 10000 },
-      { nombre: 'Jarra de Limonada de Coco', precio: 30000 },
-      { nombre: 'Media Jarra de Limonada de Coco', precio: 20000 },
-      { nombre: 'Limonada de Coco Personal', precio: 15000 },
-      { nombre: 'Jarra de Limonada Cerezada', precio: 28000 },
-      { nombre: 'Media Jarra de Limonada Cerezada', precio: 20000 },
-      { nombre: 'Limonada de Vino Personal', precio: 15000 },
-      { nombre: 'Agua Personal', precio: 3000 },
+      { nombre: 'Gaseosa Personal', precio: 3000, enviarACocina: false },
+      { nombre: 'Gaseosa 1.5L', precio: 8000, enviarACocina: false },
+      { nombre: 'Gaseosa 3L', precio: 12000, enviarACocina: false },
+      { nombre: 'Jarra de Limonada de Panela', precio: 15000, enviarACocina: false },
+      { nombre: 'Media Jarra de Limonada de Panela', precio: 8000, enviarACocina: false },
+      { nombre: 'Vaso de Limonada de Panela', precio: 4000, enviarACocina: false },
+      { nombre: 'Jarra de Limonada Natural', precio: 15000, enviarACocina: false },
+      { nombre: 'Media Jarra de Limonada Natural', precio: 10000, enviarACocina: false },
+      { nombre: 'Vaso de Limonada Natural', precio: 6000, enviarACocina: false },
+      { nombre: 'Jarra de Jugo Natural en Agua', precio: 15000, enviarACocina: false },
+      { nombre: 'Media Jarra de Jugo en Agua', precio: 10000, enviarACocina: false },
+      { nombre: 'Jarra de Jugo en Leche', precio: 20000, enviarACocina: false },
+      { nombre: 'Media Jarra de Jugo en Leche', precio: 15000, enviarACocina: false },
+      { nombre: 'Vaso de Jugo en Leche', precio: 10000, enviarACocina: false },
+      { nombre: 'Jarra de Limonada de Coco', precio: 30000, enviarACocina: false },
+      { nombre: 'Media Jarra de Limonada de Coco', precio: 20000, enviarACocina: false },
+      { nombre: 'Limonada de Coco Personal', precio: 15000, enviarACocina: false },
+      { nombre: 'Jarra de Limonada Cerezada', precio: 28000, enviarACocina: false },
+      { nombre: 'Media Jarra de Limonada Cerezada', precio: 20000, enviarACocina: false },
+      { nombre: 'Limonada de Vino Personal', precio: 15000, enviarACocina: false },
+      { nombre: 'Agua Personal', precio: 3000, enviarACocina: false },
     ],
   },
 ];
@@ -166,6 +169,7 @@ async function seed() {
             nombre: producto.nombre,
             precio: producto.precio,
             tipoImpuesto: TipoImpuesto.EXCLUIDO,
+            enviarACocina: producto.enviarACocina ?? true,
           }),
         );
         console.log(`Producto creado: ${producto.nombre}`);

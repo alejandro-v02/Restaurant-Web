@@ -7,8 +7,6 @@ import { MESA_REPOSITORY } from '../../mesas/domain/ports/mesa.repository.port';
 import type { MesaRepository } from '../../mesas/domain/ports/mesa.repository.port';
 import { PRODUCTO_REPOSITORY } from '../../catalogo/domain/ports/producto.repository.port';
 import type { ProductoRepository } from '../../catalogo/domain/ports/producto.repository.port';
-import { CATEGORIA_REPOSITORY } from '../../catalogo/domain/ports/categoria.repository.port';
-import type { CategoriaRepository } from '../../catalogo/domain/ports/categoria.repository.port';
 import { USUARIO_REPOSITORY } from '../../usuarios/domain/ports/usuario.repository.port';
 import type { UsuarioRepository } from '../../usuarios/domain/ports/usuario.repository.port';
 import { EstadoPedido } from '../../pedidos/domain/entities/pedido.entity';
@@ -34,26 +32,20 @@ export class ListarItemsCocinaUseCase {
     private readonly pedidoItemRepository: PedidoItemRepository,
     @Inject(MESA_REPOSITORY) private readonly mesaRepository: MesaRepository,
     @Inject(PRODUCTO_REPOSITORY) private readonly productoRepository: ProductoRepository,
-    @Inject(CATEGORIA_REPOSITORY)
-    private readonly categoriaRepository: CategoriaRepository,
     @Inject(USUARIO_REPOSITORY) private readonly usuarioRepository: UsuarioRepository,
   ) {}
 
   async execute(): Promise<ItemCocina[]> {
-    const [pedidos, productos, categorias, mesas, usuarios] = await Promise.all([
+    const [pedidos, productos, mesas, usuarios] = await Promise.all([
       this.pedidoRepository.findByEstados([EstadoPedido.ENVIADO_COCINA]),
       this.productoRepository.findAll(),
-      this.categoriaRepository.findAll(),
       this.mesaRepository.findAll(),
       this.usuarioRepository.findAll(),
     ]);
 
-    const categoriasDeCocina = new Set(
-      categorias.filter((categoria) => categoria.enviarACocina).map((categoria) => categoria.id),
-    );
     const productosDeCocina = new Map(
       productos
-        .filter((producto) => categoriasDeCocina.has(producto.categoriaId))
+        .filter((producto) => producto.enviarACocina)
         .map((producto) => [producto.id, producto]),
     );
     const mesasPorId = new Map(mesas.map((mesa) => [mesa.id, mesa]));

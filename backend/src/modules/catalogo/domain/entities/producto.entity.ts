@@ -12,6 +12,7 @@ export class Producto {
   precio!: number;
   tipoImpuesto: TipoImpuesto = TipoImpuesto.EXCLUIDO;
   disponible: boolean = true;
+  enviarACocina: boolean = true;
   createdAt!: Date;
   updatedAt!: Date;
 

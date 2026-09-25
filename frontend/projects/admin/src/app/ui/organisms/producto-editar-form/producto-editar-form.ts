@@ -34,6 +34,7 @@ export class ProductoEditarFormOrganism implements OnInit {
     precio: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
     tipoImpuesto: ['EXCLUIDO' as TipoImpuesto, [Validators.required]],
     disponible: [true],
+    enviarACocina: [true],
   });
 
   ngOnInit(): void {
@@ -44,6 +45,7 @@ export class ProductoEditarFormOrganism implements OnInit {
       precio: String(producto.precio),
       tipoImpuesto: producto.tipoImpuesto,
       disponible: producto.disponible,
+      enviarACocina: producto.enviarACocina,
     });
   }
 
@@ -59,6 +61,7 @@ export class ProductoEditarFormOrganism implements OnInit {
       precio: Number(raw.precio),
       tipoImpuesto: raw.tipoImpuesto,
       disponible: raw.disponible,
+      enviarACocina: raw.enviarACocina,
     });
   }
 }

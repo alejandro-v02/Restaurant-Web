@@ -21,4 +21,5 @@ export interface Producto {
   precio: number;
   tipoImpuesto: TipoImpuesto;
   disponible: boolean;
+  enviarACocina: boolean;
 }
