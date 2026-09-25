@@ -1,0 +1,116 @@
+<div class="flex min-h-screen flex-col">
+  <header class="border-b border-gray-300 p-4">
+    <button type="button" class="mb-1 text-sm text-gray-500" (click)="onVolver()">← Volver</button>
+    <div class="flex items-center justify-between">
+      <h1 class="text-lg font-semibold">Mesa {{ numero }}</h1>
+      @if (pedido(); as pedidoActual) {
+        <div class="flex items-center gap-2">
+          <span class="border border-gray-300 px-2 py-1 text-xs">
+            {{ pedidoActual.estado === 'ENVIADO_COCINA' ? '🔥 En cocina' : '📝 Tomando pedido' }}
+          </span>
+          <span class="text-sm text-gray-500">{{ pedidoActual.personas }} personas</span>
+        </div>
+      }
+    </div>
+  </header>
+
+  <main class="flex-1 overflow-y-auto p-4">
+    @if (errorMensaje()) {
+      <p class="mb-4 border border-gray-300 p-3 text-sm text-red-600" role="alert">
+        {{ errorMensaje() }}
+      </p>
+    }
+
+    @if (cargando()) {
+      <p class="text-sm text-gray-500">Cargando…</p>
+    } @else {
+      <section class="mb-4">
+        <div class="flex gap-2 overflow-x-auto pb-2">
+          @for (categoria of categorias(); track categoria.id) {
+            <button
+              type="button"
+              class="whitespace-nowrap border px-3 py-2 text-sm"
+              [class]="categoria.id === categoriaActivaId() ? 'border-gray-900 font-semibold' : 'border-gray-300'"
+              (click)="onElegirCategoria(categoria.id)"
+            >
+              {{ categoria.nombre }}
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="mb-6 flex flex-col gap-2">
+        @for (producto of productosDeCategoria(); track producto.id) {
+          <div class="border border-gray-300 p-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm">{{ producto.nombre }}</span>
+              <span class="text-sm text-gray-500">${{ producto.precio }}</span>
+            </div>
+
+            <div class="mt-2 flex items-center gap-3">
+              <button
+                type="button"
+                class="h-9 w-9 border border-gray-300 text-lg disabled:opacity-40"
+                [disabled]="cantidadDe(producto.id) === 0"
+                (click)="onDecrementar(producto)"
+              >
+                −
+              </button>
+              <span class="w-6 text-center text-sm font-semibold">{{ cantidadDe(producto.id) }}</span>
+              <button
+                type="button"
+                class="h-9 w-9 border border-gray-300 text-lg"
+                (click)="onIncrementar(producto)"
+              >
+                +
+              </button>
+              @if (confirmadoProductoId() === producto.id) {
+                <span class="text-xs text-green-700">✓ agregado</span>
+              }
+            </div>
+
+            @if (cantidadDe(producto.id) > 0) {
+              <ui-input
+                class="mt-2 block"
+                placeholder="Notas (opcional)"
+                [ngModel]="notaDe(producto.id)"
+                (ngModelChange)="onNotaInput(producto.id, $event)"
+                (blur)="onGuardarNota(producto)"
+              />
+            }
+          </div>
+        } @empty {
+          <p class="text-sm text-gray-400">No hay productos en esta categoría.</p>
+        }
+      </section>
+
+      <section class="border-t border-gray-300 pt-4">
+        <h2 class="mb-2 text-sm text-gray-500">Pedido actual</h2>
+        <div class="mb-3 flex flex-col gap-2">
+          @for (item of items(); track item.id) {
+            <div class="flex items-center justify-between border border-gray-300 p-3">
+              <span class="text-sm">{{ item.cantidad }}x {{ nombreProducto(item.productoId) }}</span>
+              <span class="text-sm text-gray-500">${{ item.cantidad * item.precioUnitario }}</span>
+            </div>
+          } @empty {
+            <p class="text-sm text-gray-400">Todavía no has agregado nada.</p>
+          }
+        </div>
+
+        <div class="mb-4 flex items-center justify-between text-base font-semibold">
+          <span>Total</span>
+          <span>${{ total() }}</span>
+        </div>
+
+        <ui-button
+          [fullWidth]="true"
+          [disabled]="items().length === 0"
+          [loading]="enviando()"
+          (pressed)="onEnviarCocina()"
+        >
+          Enviar a cocina
+        </ui-button>
+      </section>
+    }
+  </main>
+</div>

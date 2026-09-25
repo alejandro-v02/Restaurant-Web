@@ -8,6 +8,7 @@ import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { CatalogoModule } from './modules/catalogo/catalogo.module';
 import { MesasModule } from './modules/mesas/mesas.module';
 import { PedidosModule } from './modules/pedidos/pedidos.module';
+import { CocinaModule } from './modules/cocina/cocina.module';
 import { CajaModule } from './modules/caja/caja.module';
 import { ClientesModule } from './modules/clientes/clientes.module';
 import { FacturacionModule } from './modules/facturacion/facturacion.module';
@@ -25,6 +26,7 @@ import { FacturacionModule } from './modules/facturacion/facturacion.module';
     CatalogoModule,
     MesasModule,
     PedidosModule,
+    CocinaModule,
     CajaModule,
     ClientesModule,
     FacturacionModule,

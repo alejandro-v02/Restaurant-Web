@@ -13,7 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Mesas', path: '/mesas', roles: ['ADMIN', 'CAJERO'], enabled: false },
   { label: 'Usuarios', path: '/usuarios', roles: ['ADMIN'], enabled: false },
   { label: 'Pedidos', path: '/pedidos', roles: ['CAJERO'], enabled: false },
-  { label: 'Cocina', path: '/cocina', roles: ['COCINA'], enabled: false },
+  { label: 'Cocina', path: '/cocina', roles: ['ADMIN', 'COCINA'], enabled: true },
   { label: 'Caja', path: '/caja', roles: ['CAJERO'], enabled: false },
   { label: 'Facturación', path: '/facturacion', roles: ['ADMIN', 'CAJERO'], enabled: false },
   { label: 'Reportes', path: '/reportes', roles: ['ADMIN'], enabled: false },

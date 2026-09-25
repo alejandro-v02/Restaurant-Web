@@ -32,7 +32,7 @@ export class AsignarMeseroUseCase {
       }
     }
 
-    mesa.meseroId = meseroId ?? undefined;
+    mesa.meseroId = meseroId;
     await this.mesaRepository.save(mesa);
 
     return (await this.mesaRepository.findById(mesaId))!;

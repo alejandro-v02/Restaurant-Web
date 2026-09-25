@@ -1,0 +1,12 @@
+<input
+  class="w-full border border-gray-300 px-3 py-3 text-base disabled:cursor-not-allowed disabled:bg-gray-100"
+  [id]="id()"
+  [type]="type()"
+  [placeholder]="placeholder()"
+  [autocomplete]="autocomplete()"
+  [attr.inputmode]="inputmode()"
+  [disabled]="disabled"
+  [value]="value"
+  (input)="handleInput($event)"
+  (blur)="handleBlur()"
+/>

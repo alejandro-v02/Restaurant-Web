@@ -1,0 +1,94 @@
+<div class="flex min-h-screen flex-col">
+  <header class="flex items-center justify-between border-b border-gray-300 p-4">
+    <span class="text-base">🔥 <strong>{{ usuario()?.nombre }}</strong></span>
+    <ui-button variant="secondary" (pressed)="onLogout()">Salir</ui-button>
+  </header>
+
+  <main class="flex-1 overflow-y-auto p-4">
+    @if (errorMensaje()) {
+      <p class="mb-4 border border-gray-300 p-3 text-sm text-red-600" role="alert">
+        {{ errorMensaje() }}
+      </p>
+    }
+
+    @if (cargando()) {
+      <p class="text-sm text-gray-500">Cargando…</p>
+    } @else if (vista() === 'personas' && mesaSeleccionada(); as mesa) {
+      <div class="flex flex-col gap-4">
+        <h2 class="text-xl font-semibold">Mesa {{ mesa.numero }}</h2>
+
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm" for="personas">¿Cuántas personas?</label>
+          <ui-input
+            id="personas"
+            name="personas"
+            type="tel"
+            inputmode="numeric"
+            placeholder="Ej. 4"
+            [ngModel]="personas()"
+            (ngModelChange)="personas.set($event)"
+          />
+        </div>
+
+        <div class="flex gap-3">
+          <ui-button variant="secondary" [fullWidth]="true" (pressed)="onCancelar()">
+            Cancelar
+          </ui-button>
+          <ui-button
+            [fullWidth]="true"
+            [disabled]="!personas()"
+            [loading]="procesando()"
+            (pressed)="onTomarPedido()"
+          >
+            Tomar pedido
+          </ui-button>
+        </div>
+      </div>
+    } @else {
+      @if (misMesas().length > 0) {
+        <section class="mb-6">
+          <h2 class="mb-2 text-sm text-gray-500">Tus mesas activas</h2>
+          <div class="flex flex-wrap gap-2">
+            @for (mesa of misMesas(); track mesa.id) {
+              <div class="flex items-center border border-gray-900">
+                <button
+                  type="button"
+                  class="px-3 py-2 text-sm font-semibold"
+                  (click)="onContinuarPedido(mesa)"
+                >
+                  {{ mesa.numero }}
+                </button>
+                <span class="border-l border-gray-900 px-2 py-2 text-xs text-gray-500">
+                  {{ estadoPedidoPorMesa()[mesa.id] === 'ENVIADO_COCINA' ? '🔥 en cocina' : '📝 tomando' }}
+                </span>
+                <button
+                  type="button"
+                  class="border-l border-gray-900 px-2 py-2 text-sm text-gray-500"
+                  (click)="onLiberar(mesa)"
+                >
+                  ✕
+                </button>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <section>
+        <h2 class="mb-2 text-sm text-gray-500">Elige un número</h2>
+        <div class="grid grid-cols-8 gap-1.5">
+          @for (mesa of mesas(); track mesa.id) {
+            <button
+              type="button"
+              class="aspect-square border text-sm"
+              [class]="claseNumero(mesa)"
+              (click)="onSeleccionarNumero(mesa)"
+            >
+              {{ mesa.numero }}
+            </button>
+          }
+        </div>
+      </section>
+    }
+  </main>
+</div>

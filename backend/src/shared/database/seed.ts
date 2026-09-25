@@ -173,13 +173,13 @@ async function seed() {
     }
   }
 
-  for (let numero = 1; numero <= 8; numero++) {
+  for (let numero = 1; numero <= 100; numero++) {
     const existente = await mesaRepo.findOneBy({ numero });
     if (!existente) {
       await mesaRepo.save(mesaRepo.create({ numero, capacidad: 4 }));
-      console.log(`Mesa creada: ${numero}`);
     }
   }
+  console.log('Mesas creadas: 1 a 100');
 
   await AppDataSource.destroy();
   console.log('Seed completado.');

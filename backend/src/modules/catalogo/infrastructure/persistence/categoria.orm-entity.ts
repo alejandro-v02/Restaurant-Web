@@ -10,6 +10,7 @@ export const CategoriaOrmEntity = new EntitySchema<Categoria>({
     nombre: { type: 'varchar', length: 100 },
     orden: { type: 'int', default: 0 },
     activo: { type: 'boolean', default: true },
+    enviarACocina: { type: 'boolean', name: 'enviar_a_cocina', default: true },
     createdAt: { type: 'timestamptz', name: 'created_at', createDate: true },
     updatedAt: { type: 'timestamptz', name: 'updated_at', updateDate: true },
   },

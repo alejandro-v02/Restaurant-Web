@@ -6,4 +6,5 @@ export interface PedidoItemRepository {
   findById(id: string): Promise<PedidoItem | null>;
   findByPedido(pedidoId: string): Promise<PedidoItem[]>;
   save(item: PedidoItem): Promise<PedidoItem>;
+  delete(id: string): Promise<void>;
 }

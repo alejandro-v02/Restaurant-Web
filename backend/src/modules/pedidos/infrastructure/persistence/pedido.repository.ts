@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Pedido } from '../../domain/entities/pedido.entity';
+import { In, Repository } from 'typeorm';
+import { EstadoPedido, Pedido } from '../../domain/entities/pedido.entity';
 import { PedidoRepository } from '../../domain/ports/pedido.repository.port';
 import { PedidoOrmEntity } from './pedido.orm-entity';
 
@@ -18,6 +18,17 @@ export class TypeOrmPedidoRepository implements PedidoRepository {
 
   findByMesa(mesaId: string): Promise<Pedido[]> {
     return this.repo.find({ where: { mesaId } });
+  }
+
+  findActivoPorMesa(mesaId: string): Promise<Pedido | null> {
+    return this.repo.findOneBy({
+      mesaId,
+      estado: In([EstadoPedido.ABIERTO, EstadoPedido.ENVIADO_COCINA]),
+    });
+  }
+
+  findByEstados(estados: EstadoPedido[]): Promise<Pedido[]> {
+    return this.repo.find({ where: { estado: In(estados) } });
   }
 
   save(pedido: Pedido): Promise<Pedido> {
