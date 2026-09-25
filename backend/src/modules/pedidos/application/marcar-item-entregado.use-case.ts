@@ -32,8 +32,8 @@ export class MarcarItemEntregadoUseCase {
       throw new NotFoundException('Ítem no encontrado');
     }
 
-    if (item.estado !== EstadoPedidoItem.LISTO) {
-      throw new ConflictException('Ese plato todavía no está listo en cocina');
+    if (item.estado === EstadoPedidoItem.ENTREGADO) {
+      throw new ConflictException('Ese plato ya fue marcado como entregado');
     }
 
     if (!esSupervisor) {

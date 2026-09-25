@@ -5,7 +5,7 @@ import { forkJoin } from 'rxjs';
 import { CatalogoService } from '../../core/catalogo/catalogo.service';
 import { Categoria, Producto } from '../../core/catalogo/catalogo.models';
 import { PedidoService } from '../../core/pedidos/pedido.service';
-import { EstadoPedidoItem, Pedido, PedidoItem } from '../../core/pedidos/pedido.models';
+import { Pedido, PedidoItem } from '../../core/pedidos/pedido.models';
 import { ButtonAtom } from '../../ui/atoms/button/button';
 import { InputAtom } from '../../ui/atoms/input/input';
 
@@ -43,13 +43,6 @@ export class PedidoPage implements OnDestroy {
     () => this.refrescarItems(),
     INTERVALO_ACTUALIZACION_MS,
   );
-
-  private readonly ETIQUETA_ESTADO: Record<EstadoPedidoItem, string> = {
-    PENDIENTE: 'Pendiente',
-    EN_PREPARACION: 'En preparación',
-    LISTO: 'Listo',
-    ENTREGADO: 'Entregado',
-  };
 
   readonly productosDeCategoria = computed(() => {
     const catId = this.categoriaActivaId();
@@ -198,10 +191,6 @@ export class PedidoPage implements OnDestroy {
 
   onVolver(): void {
     this.router.navigateByUrl('/');
-  }
-
-  etiquetaEstado(estado: EstadoPedidoItem): string {
-    return this.ETIQUETA_ESTADO[estado];
   }
 
   onEntregarItem(item: PedidoItem): void {

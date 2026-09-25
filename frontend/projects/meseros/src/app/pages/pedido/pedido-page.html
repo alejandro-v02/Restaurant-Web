@@ -97,9 +97,6 @@
                 @if (item.estado === 'ENTREGADO') {
                   <span class="text-xs text-green-700">✓ Entregado</span>
                 } @else {
-                  <span class="border border-gray-300 px-2 py-0.5 text-xs">{{ etiquetaEstado(item.estado) }}</span>
-                }
-                @if (item.estado === 'LISTO') {
                   <ui-button
                     variant="secondary"
                     [loading]="entregandoItemId() === item.id"

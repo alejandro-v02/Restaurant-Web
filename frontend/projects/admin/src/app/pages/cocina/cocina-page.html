@@ -8,8 +8,6 @@
         <th class="p-2">Cant.</th>
         <th class="p-2">Pidió primero</th>
         <th class="p-2">Notas</th>
-        <th class="p-2">Estado</th>
-        <th class="p-2"></th>
       </tr>
     </thead>
     <tbody>
@@ -19,26 +17,10 @@
           <td class="p-2 text-lg font-bold">{{ grupo.cantidadTotal }}</td>
           <td class="p-2 text-sm">{{ grupo.primerMesero }}</td>
           <td class="p-2 text-xs text-gray-500">{{ grupo.notas.join(', ') }}</td>
-          <td class="p-2">
-            <span class="border border-gray-300 px-2 py-0.5 text-xs">{{ grupo.estado }}</span>
-          </td>
-          <td class="p-2">
-            @if (tieneSiguiente(grupo.estado)) {
-              <ui-button
-                variant="secondary"
-                [loading]="procesandoKey() === grupo.key"
-                (pressed)="onAvanzarGrupo(grupo)"
-              >
-                {{ etiquetaBoton(grupo.estado) }}
-              </ui-button>
-            } @else {
-              <span class="text-xs text-gray-400">Esperando al mesero</span>
-            }
-          </td>
         </tr>
       } @empty {
         <tr>
-          <td class="p-4 text-sm text-gray-400" colspan="6">No hay pedidos pendientes en cocina.</td>
+          <td class="p-4 text-sm text-gray-400" colspan="4">No hay pedidos pendientes en cocina.</td>
         </tr>
       }
     </tbody>
