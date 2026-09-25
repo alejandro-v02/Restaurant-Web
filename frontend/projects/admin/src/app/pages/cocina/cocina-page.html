@@ -1,36 +1,42 @@
-<div class="flex flex-col gap-4">
-  @if (cargando()) {
-    <p class="text-sm text-gray-500">Cargando…</p>
-  } @else {
-    @for (grupo of grupos(); track grupo.mesaNumero) {
-      <section class="border border-gray-300">
-        <div class="border-b border-gray-300 px-4 py-2">
-          <h3 class="text-sm font-semibold">Mesa {{ grupo.mesaNumero }}</h3>
-        </div>
-
-        @for (item of grupo.items; track item.itemId) {
-          <div class="flex items-center justify-between border-b border-gray-300 px-4 py-2 last:border-b-0">
-            <div>
-              <span class="text-sm">{{ item.cantidad }}x {{ item.productoNombre }}</span>
-              @if (item.notas) {
-                <p class="text-xs text-gray-500">{{ item.notas }}</p>
-              }
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="border border-gray-300 px-2 py-1 text-xs">{{ item.estado }}</span>
-              <ui-button
-                variant="secondary"
-                [loading]="procesandoId() === item.itemId"
-                (pressed)="onAvanzar(item)"
-              >
-                {{ etiquetaBoton(item.estado) }}
-              </ui-button>
-            </div>
-          </div>
-        }
-      </section>
-    } @empty {
-      <p class="text-sm text-gray-400">No hay pedidos pendientes en cocina.</p>
-    }
-  }
-</div>
+@if (cargando()) {
+  <p class="text-sm text-gray-500">Cargando…</p>
+} @else {
+  <table class="w-full border border-gray-300 text-left">
+    <thead>
+      <tr class="border-b border-gray-300 text-sm text-gray-500">
+        <th class="p-2">Plato</th>
+        <th class="p-2">Cant.</th>
+        <th class="p-2">Pidió primero</th>
+        <th class="p-2">Notas</th>
+        <th class="p-2">Estado</th>
+        <th class="p-2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (grupo of grupos(); track grupo.key) {
+        <tr class="border-b border-gray-200">
+          <td class="p-2 text-lg font-semibold">{{ grupo.productoNombre }}</td>
+          <td class="p-2 text-lg font-bold">{{ grupo.cantidadTotal }}</td>
+          <td class="p-2 text-sm">{{ grupo.primerMesero }}</td>
+          <td class="p-2 text-xs text-gray-500">{{ grupo.notas.join(', ') }}</td>
+          <td class="p-2">
+            <span class="border border-gray-300 px-2 py-0.5 text-xs">{{ grupo.estado }}</span>
+          </td>
+          <td class="p-2">
+            <ui-button
+              variant="secondary"
+              [loading]="procesandoKey() === grupo.key"
+              (pressed)="onAvanzarGrupo(grupo)"
+            >
+              {{ etiquetaBoton(grupo.estado) }}
+            </ui-button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td class="p-4 text-sm text-gray-400" colspan="6">No hay pedidos pendientes en cocina.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

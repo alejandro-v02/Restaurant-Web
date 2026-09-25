@@ -9,6 +9,8 @@ import { PRODUCTO_REPOSITORY } from '../../catalogo/domain/ports/producto.reposi
 import type { ProductoRepository } from '../../catalogo/domain/ports/producto.repository.port';
 import { CATEGORIA_REPOSITORY } from '../../catalogo/domain/ports/categoria.repository.port';
 import type { CategoriaRepository } from '../../catalogo/domain/ports/categoria.repository.port';
+import { USUARIO_REPOSITORY } from '../../usuarios/domain/ports/usuario.repository.port';
+import type { UsuarioRepository } from '../../usuarios/domain/ports/usuario.repository.port';
 import { EstadoPedido } from '../../pedidos/domain/entities/pedido.entity';
 import { EstadoPedidoItem } from '../../pedidos/domain/entities/pedido-item.entity';
 
@@ -16,6 +18,7 @@ export interface ItemCocina {
   itemId: string;
   pedidoId: string;
   mesaNumero: number;
+  meseroNombre: string;
   productoNombre: string;
   cantidad: number;
   notas?: string;
@@ -33,14 +36,16 @@ export class ListarItemsCocinaUseCase {
     @Inject(PRODUCTO_REPOSITORY) private readonly productoRepository: ProductoRepository,
     @Inject(CATEGORIA_REPOSITORY)
     private readonly categoriaRepository: CategoriaRepository,
+    @Inject(USUARIO_REPOSITORY) private readonly usuarioRepository: UsuarioRepository,
   ) {}
 
   async execute(): Promise<ItemCocina[]> {
-    const [pedidos, productos, categorias, mesas] = await Promise.all([
+    const [pedidos, productos, categorias, mesas, usuarios] = await Promise.all([
       this.pedidoRepository.findByEstados([EstadoPedido.ENVIADO_COCINA]),
       this.productoRepository.findAll(),
       this.categoriaRepository.findAll(),
       this.mesaRepository.findAll(),
+      this.usuarioRepository.findAll(),
     ]);
 
     const categoriasDeCocina = new Set(
@@ -52,12 +57,14 @@ export class ListarItemsCocinaUseCase {
         .map((producto) => [producto.id, producto]),
     );
     const mesasPorId = new Map(mesas.map((mesa) => [mesa.id, mesa]));
+    const usuariosPorId = new Map(usuarios.map((usuario) => [usuario.id, usuario]));
 
     const resultado: ItemCocina[] = [];
 
     for (const pedido of pedidos) {
       const items = await this.pedidoItemRepository.findByPedido(pedido.id);
       const mesa = mesasPorId.get(pedido.mesaId);
+      const mesero = usuariosPorId.get(pedido.meseroId);
 
       for (const item of items) {
         if (item.estado === EstadoPedidoItem.ENTREGADO) {
@@ -72,6 +79,7 @@ export class ListarItemsCocinaUseCase {
           itemId: item.id,
           pedidoId: pedido.id,
           mesaNumero: mesa?.numero ?? 0,
+          meseroNombre: mesero?.nombre ?? '—',
           productoNombre: producto.nombre,
           cantidad: item.cantidad,
           notas: item.notas,
