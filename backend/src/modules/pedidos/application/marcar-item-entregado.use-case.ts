@@ -12,6 +12,7 @@ import type { PedidoItemRepository } from '../domain/ports/pedido-item.repositor
 import { MESA_REPOSITORY } from '../../mesas/domain/ports/mesa.repository.port';
 import type { MesaRepository } from '../../mesas/domain/ports/mesa.repository.port';
 import { EstadoPedidoItem, PedidoItem } from '../domain/entities/pedido-item.entity';
+import { EstadoPedido } from '../domain/entities/pedido.entity';
 
 @Injectable()
 export class MarcarItemEntregadoUseCase {
@@ -46,6 +47,18 @@ export class MarcarItemEntregadoUseCase {
 
     item.estado = EstadoPedidoItem.ENTREGADO;
     await this.pedidoItemRepository.save(item);
+
+    const todosLosItems = await this.pedidoItemRepository.findByPedido(item.pedidoId);
+    const todoEntregado = todosLosItems.every(
+      (unItem) => unItem.estado === EstadoPedidoItem.ENTREGADO,
+    );
+    if (todoEntregado) {
+      const pedido = await this.pedidoRepository.findById(item.pedidoId);
+      if (pedido && pedido.estado === EstadoPedido.ENVIADO_COCINA) {
+        pedido.estado = EstadoPedido.SERVIDO;
+        await this.pedidoRepository.save(pedido);
+      }
+    }
 
     return (await this.pedidoItemRepository.findById(itemId))!;
   }

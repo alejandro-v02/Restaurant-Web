@@ -23,7 +23,7 @@ export class TypeOrmPedidoRepository implements PedidoRepository {
   findActivoPorMesa(mesaId: string): Promise<Pedido | null> {
     return this.repo.findOneBy({
       mesaId,
-      estado: In([EstadoPedido.ABIERTO, EstadoPedido.ENVIADO_COCINA]),
+      estado: In([EstadoPedido.ABIERTO, EstadoPedido.ENVIADO_COCINA, EstadoPedido.SERVIDO]),
     });
   }
 

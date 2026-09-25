@@ -1,0 +1,93 @@
+@if (cargando()) {
+  <p class="text-sm text-gray-500">Cargando…</p>
+} @else if (!turno()) {
+  <div class="max-w-sm border border-gray-300 p-4">
+    <h2 class="mb-3 text-sm font-semibold">Abrir turno de caja</h2>
+    <div class="flex items-end gap-3">
+      <div class="flex-1">
+        <label class="mb-1 block text-xs text-gray-500" for="monto-apertura">Monto inicial en caja</label>
+        <ui-input
+          id="monto-apertura"
+          type="text"
+          placeholder="0"
+          [ngModel]="montoApertura()"
+          (ngModelChange)="montoApertura.set($event)"
+        />
+      </div>
+      <ui-button [loading]="procesandoAbrir()" (pressed)="onAbrirTurno()">Abrir turno</ui-button>
+    </div>
+  </div>
+} @else {
+  <div class="mb-4 flex items-center justify-between border border-gray-300 p-3">
+    <span class="text-sm">
+      Turno abierto · caja inicial ${{ turno()!.montoApertura }}
+    </span>
+    @if (!mostrarCerrar()) {
+      <ui-button variant="secondary" (pressed)="onMostrarCerrar()">Cerrar turno</ui-button>
+    } @else {
+      <div class="flex items-center gap-2">
+        <ui-input
+          type="text"
+          placeholder="Monto final en caja"
+          [ngModel]="montoCierre()"
+          (ngModelChange)="montoCierre.set($event)"
+        />
+        <ui-button [loading]="procesandoCerrar()" (pressed)="onCerrarTurno()">Confirmar</ui-button>
+        <ui-button variant="secondary" (pressed)="onCancelarCerrar()">Cancelar</ui-button>
+      </div>
+    }
+  </div>
+
+  <div class="flex flex-col gap-3">
+    @for (pedido of pedidos(); track pedido.pedidoId) {
+      <div class="border border-gray-300 p-3">
+        <div class="flex items-center justify-between">
+          <span class="text-lg font-semibold">Mesa {{ pedido.mesaNumero }}</span>
+          <span class="text-lg font-bold">${{ pedido.total }}</span>
+        </div>
+        <p class="text-xs text-gray-500">{{ pedido.meseroNombre }} · {{ pedido.personas }} personas</p>
+
+        <ul class="mt-2 text-sm text-gray-700">
+          @for (item of pedido.items; track item.productoNombre) {
+            <li>{{ item.cantidad }}x {{ item.productoNombre }}</li>
+          }
+        </ul>
+
+        @if (pedidoCobrandoId() === pedido.pedidoId) {
+          <div class="mt-3 flex flex-wrap items-end gap-2 border-t border-gray-200 pt-3">
+            <div class="w-40">
+              <label class="mb-1 block text-xs text-gray-500">Método de pago</label>
+              <ui-select
+                [options]="opcionesMetodo"
+                [ngModel]="metodoSeleccionado()"
+                (ngModelChange)="metodoSeleccionado.set($event)"
+              />
+            </div>
+            <div class="w-32">
+              <label class="mb-1 block text-xs text-gray-500">Propina (opcional)</label>
+              <ui-input
+                type="text"
+                placeholder="0"
+                [ngModel]="propina()"
+                (ngModelChange)="propina.set($event)"
+              />
+            </div>
+            <ui-button
+              [loading]="procesandoCobro() === pedido.pedidoId"
+              (pressed)="onConfirmarCobro(pedido)"
+            >
+              Confirmar cobro
+            </ui-button>
+            <ui-button variant="secondary" (pressed)="onCancelarCobro()">Cancelar</ui-button>
+          </div>
+        } @else {
+          <div class="mt-3 border-t border-gray-200 pt-3">
+            <ui-button (pressed)="onAbrirCobro(pedido)">Cobrar</ui-button>
+          </div>
+        }
+      </div>
+    } @empty {
+      <p class="text-sm text-gray-400">No hay pedidos listos para cobrar.</p>
+    }
+  </div>
+}

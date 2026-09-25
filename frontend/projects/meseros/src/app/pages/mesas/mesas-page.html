@@ -59,7 +59,13 @@
                   {{ mesa.numero }}
                 </button>
                 <span class="border-l border-gray-900 px-2 py-2 text-xs text-gray-500">
-                  {{ estadoPedidoPorMesa()[mesa.id] === 'ENVIADO_COCINA' ? '🔥 en cocina' : '📝 tomando' }}
+                  {{
+                    estadoPedidoPorMesa()[mesa.id] === 'ENVIADO_COCINA'
+                      ? '🔥 en cocina'
+                      : estadoPedidoPorMesa()[mesa.id] === 'SERVIDO'
+                        ? '✅ para cobrar'
+                        : '📝 tomando'
+                  }}
                 </span>
                 <button
                   type="button"
