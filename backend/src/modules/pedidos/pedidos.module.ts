@@ -11,6 +11,7 @@ import { CrearPedidoUseCase } from './application/crear-pedido.use-case';
 import { AgregarItemPedidoUseCase } from './application/agregar-item-pedido.use-case';
 import { ActualizarItemPedidoUseCase } from './application/actualizar-item-pedido.use-case';
 import { EliminarItemPedidoUseCase } from './application/eliminar-item-pedido.use-case';
+import { MarcarItemEntregadoUseCase } from './application/marcar-item-entregado.use-case';
 import { EnviarPedidoCocinaUseCase } from './application/enviar-pedido-cocina.use-case';
 import { ObtenerPedidoActivoUseCase } from './application/obtener-pedido-activo.use-case';
 import { MesasModule } from '../mesas/mesas.module';
@@ -30,6 +31,7 @@ import { CatalogoModule } from '../catalogo/catalogo.module';
     AgregarItemPedidoUseCase,
     ActualizarItemPedidoUseCase,
     EliminarItemPedidoUseCase,
+    MarcarItemEntregadoUseCase,
     EnviarPedidoCocinaUseCase,
     ObtenerPedidoActivoUseCase,
   ],

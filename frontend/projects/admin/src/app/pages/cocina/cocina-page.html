@@ -23,13 +23,17 @@
             <span class="border border-gray-300 px-2 py-0.5 text-xs">{{ grupo.estado }}</span>
           </td>
           <td class="p-2">
-            <ui-button
-              variant="secondary"
-              [loading]="procesandoKey() === grupo.key"
-              (pressed)="onAvanzarGrupo(grupo)"
-            >
-              {{ etiquetaBoton(grupo.estado) }}
-            </ui-button>
+            @if (tieneSiguiente(grupo.estado)) {
+              <ui-button
+                variant="secondary"
+                [loading]="procesandoKey() === grupo.key"
+                (pressed)="onAvanzarGrupo(grupo)"
+              >
+                {{ etiquetaBoton(grupo.estado) }}
+              </ui-button>
+            } @else {
+              <span class="text-xs text-gray-400">Esperando al mesero</span>
+            }
           </td>
         </tr>
       } @empty {

@@ -5,7 +5,7 @@ import { forkJoin } from 'rxjs';
 import { CatalogoService } from '../../core/catalogo/catalogo.service';
 import { Categoria, Producto } from '../../core/catalogo/catalogo.models';
 import { PedidoService } from '../../core/pedidos/pedido.service';
-import { Pedido, PedidoItem } from '../../core/pedidos/pedido.models';
+import { EstadoPedidoItem, Pedido, PedidoItem } from '../../core/pedidos/pedido.models';
 import { ButtonAtom } from '../../ui/atoms/button/button';
 import { InputAtom } from '../../ui/atoms/input/input';
 
@@ -35,7 +35,15 @@ export class PedidoPage {
   readonly errorMensaje = signal<string | null>(null);
   readonly notasDraft = signal<Record<string, string>>({});
   readonly confirmadoProductoId = signal<string | null>(null);
+  readonly entregandoItemId = signal<string | null>(null);
   private confirmacionTimeout?: ReturnType<typeof setTimeout>;
+
+  private readonly ETIQUETA_ESTADO: Record<EstadoPedidoItem, string> = {
+    PENDIENTE: 'Pendiente',
+    EN_PREPARACION: 'En preparación',
+    LISTO: 'Listo',
+    ENTREGADO: 'Entregado',
+  };
 
   readonly productosDeCategoria = computed(() => {
     const catId = this.categoriaActivaId();
@@ -177,6 +185,28 @@ export class PedidoPage {
 
   onVolver(): void {
     this.router.navigateByUrl('/');
+  }
+
+  etiquetaEstado(estado: EstadoPedidoItem): string {
+    return this.ETIQUETA_ESTADO[estado];
+  }
+
+  onEntregarItem(item: PedidoItem): void {
+    if (this.entregandoItemId()) {
+      return;
+    }
+    this.entregandoItemId.set(item.id);
+    this.errorMensaje.set(null);
+    this.pedidoService.entregarItem(item.id).subscribe({
+      next: (itemActualizado) => {
+        this.entregandoItemId.set(null);
+        this.reemplazarItem(itemActualizado);
+      },
+      error: (error) => {
+        this.entregandoItemId.set(null);
+        this.errorMensaje.set(error?.error?.message ?? 'No se pudo marcar como entregado');
+      },
+    });
   }
 
   private reemplazarItem(item: PedidoItem): void {

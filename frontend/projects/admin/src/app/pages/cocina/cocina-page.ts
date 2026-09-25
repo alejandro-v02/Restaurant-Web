@@ -21,13 +21,11 @@ const INTERVALO_ACTUALIZACION_MS = 8000;
 const SIGUIENTE_ESTADO: Partial<Record<EstadoPedidoItem, EstadoPedidoItem>> = {
   PENDIENTE: 'EN_PREPARACION',
   EN_PREPARACION: 'LISTO',
-  LISTO: 'ENTREGADO',
 };
 
 const ETIQUETA_BOTON: Partial<Record<EstadoPedidoItem, string>> = {
   PENDIENTE: 'Empezar',
   EN_PREPARACION: 'Marcar listo',
-  LISTO: 'Entregado',
 };
 
 @Component({
@@ -92,6 +90,10 @@ export class CocinaPage implements OnDestroy {
 
   etiquetaBoton(estado: EstadoPedidoItem): string {
     return ETIQUETA_BOTON[estado] ?? 'Actualizar';
+  }
+
+  tieneSiguiente(estado: EstadoPedidoItem): boolean {
+    return !!SIGUIENTE_ESTADO[estado];
   }
 
   onAvanzarGrupo(grupo: GrupoPlato): void {
