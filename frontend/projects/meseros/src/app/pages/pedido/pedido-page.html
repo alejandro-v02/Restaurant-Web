@@ -6,7 +6,13 @@
       @if (pedido(); as pedidoActual) {
         <div class="flex items-center gap-2">
           <span class="border border-gray-300 px-2 py-1 text-xs">
-            {{ pedidoActual.estado === 'ENVIADO_COCINA' ? '🔥 En cocina' : '📝 Tomando pedido' }}
+            {{
+              pedidoActual.estado === 'ENVIADO_COCINA'
+                ? '🔥 En cocina'
+                : pedidoActual.estado === 'SERVIDO'
+                  ? '✅ Todo entregado'
+                  : '📝 Tomando pedido'
+            }}
           </span>
           <span class="text-sm text-gray-500">{{ pedidoActual.personas }} personas</span>
         </div>
@@ -117,14 +123,24 @@
           <span>${{ total() }}</span>
         </div>
 
-        <ui-button
-          [fullWidth]="true"
-          [disabled]="items().length === 0"
-          [loading]="enviando()"
-          (pressed)="onEnviarCocina()"
-        >
-          Enviar a cocina
-        </ui-button>
+        @if (pedido()?.estado === 'SERVIDO') {
+          <p class="border border-gray-300 p-3 text-center text-sm text-green-700">
+            ✓ Todo entregado — esperando que caja lo cobre
+          </p>
+        } @else if (pedido()?.estado === 'ENVIADO_COCINA') {
+          <p class="border border-gray-300 p-3 text-center text-sm text-gray-500">
+            🔥 Pedido en cocina
+          </p>
+        } @else {
+          <ui-button
+            [fullWidth]="true"
+            [disabled]="items().length === 0"
+            [loading]="enviando()"
+            (pressed)="onEnviarCocina()"
+          >
+            Enviar a cocina
+          </ui-button>
+        }
       </section>
     }
   </main>
