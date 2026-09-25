@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
+import { IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
 
 export class CrearCategoriaDto {
   @IsString()
@@ -9,8 +9,4 @@ export class CrearCategoriaDto {
   @IsInt()
   @Min(0)
   orden?: number;
-
-  @IsOptional()
-  @IsBoolean()
-  enviarACocina?: boolean;
 }

@@ -21,6 +21,7 @@ export interface ActualizarProductoInput {
   precio?: number;
   tipoImpuesto?: TipoImpuesto;
   disponible?: boolean;
+  enviarACocina?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })

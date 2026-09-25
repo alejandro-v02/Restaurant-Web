@@ -19,6 +19,8 @@ import { CrearPedidoUseCase } from '../../application/crear-pedido.use-case';
 import { AgregarItemPedidoUseCase } from '../../application/agregar-item-pedido.use-case';
 import { ActualizarItemPedidoUseCase } from '../../application/actualizar-item-pedido.use-case';
 import { EliminarItemPedidoUseCase } from '../../application/eliminar-item-pedido.use-case';
+import { MarcarItemEntregadoUseCase } from '../../application/marcar-item-entregado.use-case';
+import { CerrarPedidoActivoUseCase } from '../../application/cerrar-pedido-activo.use-case';
 import { EnviarPedidoCocinaUseCase } from '../../application/enviar-pedido-cocina.use-case';
 import { ObtenerPedidoActivoUseCase } from '../../application/obtener-pedido-activo.use-case';
 import { CrearPedidoDto } from './dto/crear-pedido.dto';
@@ -33,6 +35,8 @@ export class PedidosController {
     private readonly agregarItem: AgregarItemPedidoUseCase,
     private readonly actualizarItem: ActualizarItemPedidoUseCase,
     private readonly eliminarItem: EliminarItemPedidoUseCase,
+    private readonly marcarEntregado: MarcarItemEntregadoUseCase,
+    private readonly cerrarPedidoActivo: CerrarPedidoActivoUseCase,
     private readonly enviarACocina: EnviarPedidoCocinaUseCase,
     private readonly obtenerActivo: ObtenerPedidoActivoUseCase,
   ) {}
@@ -82,6 +86,24 @@ export class PedidosController {
     @CurrentUser() usuario: Usuario,
   ) {
     await this.eliminarItem.execute(itemId, usuario.id, usuario.rol !== RolUsuario.MESERO);
+  }
+
+  @Patch('items/:itemId/entregar')
+  @Roles(RolUsuario.MESERO, RolUsuario.CAJERO, RolUsuario.ADMIN)
+  entregarItemPedido(
+    @Param('itemId', ParseUUIDPipe) itemId: string,
+    @CurrentUser() usuario: Usuario,
+  ) {
+    return this.marcarEntregado.execute(itemId, usuario.id, usuario.rol !== RolUsuario.MESERO);
+  }
+
+  @Patch('mesa/:mesaId/cerrar')
+  @Roles(RolUsuario.MESERO, RolUsuario.CAJERO, RolUsuario.ADMIN)
+  async cerrarActivo(
+    @Param('mesaId', ParseUUIDPipe) mesaId: string,
+    @CurrentUser() usuario: Usuario,
+  ) {
+    await this.cerrarPedidoActivo.execute(mesaId, usuario.id, usuario.rol !== RolUsuario.MESERO);
   }
 
   @Patch(':id/enviar')

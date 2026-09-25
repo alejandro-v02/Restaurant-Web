@@ -11,6 +11,7 @@ export interface CrearProductoInput {
   descripcion?: string;
   precio: number;
   tipoImpuesto?: TipoImpuesto;
+  enviarACocina?: boolean;
 }
 
 @Injectable()
@@ -34,6 +35,7 @@ export class CrearProductoUseCase {
       descripcion: input.descripcion,
       precio: input.precio,
       tipoImpuesto: input.tipoImpuesto ?? TipoImpuesto.EXCLUIDO,
+      enviarACocina: input.enviarACocina ?? true,
     });
 
     return this.productoRepository.save(producto);

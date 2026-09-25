@@ -37,4 +37,8 @@ export class ActualizarProductoDto {
   @IsOptional()
   @IsBoolean()
   disponible?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  enviarACocina?: boolean;
 }

@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional, IsString, IsUUID, Length, Min } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Length, Min } from 'class-validator';
 import { TipoImpuesto } from '../../../domain/entities/producto.entity';
 
 export class CrearProductoDto {
@@ -21,4 +21,8 @@ export class CrearProductoDto {
   @IsOptional()
   @IsEnum(TipoImpuesto)
   tipoImpuesto?: TipoImpuesto;
+
+  @IsOptional()
+  @IsBoolean()
+  enviarACocina?: boolean;
 }

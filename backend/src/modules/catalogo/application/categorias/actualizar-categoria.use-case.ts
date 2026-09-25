@@ -7,7 +7,6 @@ export interface ActualizarCategoriaInput {
   nombre?: string;
   orden?: number;
   activo?: boolean;
-  enviarACocina?: boolean;
 }
 
 @Injectable()

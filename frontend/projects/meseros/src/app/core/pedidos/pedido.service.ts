@@ -39,7 +39,15 @@ export class PedidoService {
     return this.http.delete<void>(`${API_BASE_URL}/pedidos/items/${itemId}`);
   }
 
+  entregarItem(itemId: string): Observable<PedidoItem> {
+    return this.http.patch<PedidoItem>(`${API_BASE_URL}/pedidos/items/${itemId}/entregar`, {});
+  }
+
   enviar(pedidoId: string): Observable<Pedido> {
     return this.http.patch<Pedido>(`${API_BASE_URL}/pedidos/${pedidoId}/enviar`, {});
+  }
+
+  cerrarPedidoActivo(mesaId: string): Observable<void> {
+    return this.http.patch<void>(`${API_BASE_URL}/pedidos/mesa/${mesaId}/cerrar`, {});
   }
 }
