@@ -38,6 +38,7 @@ export class PedidoPage implements OnDestroy {
   readonly notasDraft = signal<Record<string, string>>({});
   readonly confirmadoProductoId = signal<string | null>(null);
   readonly entregandoItemId = signal<string | null>(null);
+  readonly cantidadEntregarDraft = signal<Record<string, number>>({});
   private confirmacionTimeout?: ReturnType<typeof setTimeout>;
   private readonly intervalo = setInterval(
     () => this.refrescarItems(),
@@ -193,16 +194,32 @@ export class PedidoPage implements OnDestroy {
     this.router.navigateByUrl('/');
   }
 
+  cantidadEntregarDe(item: PedidoItem): number {
+    return this.cantidadEntregarDraft()[item.id] ?? item.cantidad;
+  }
+
+  onAjustarCantidadEntregar(item: PedidoItem, delta: number): void {
+    const actual = this.cantidadEntregarDe(item);
+    const nuevo = Math.min(item.cantidad, Math.max(1, actual + delta));
+    this.cantidadEntregarDraft.update((draft) => ({ ...draft, [item.id]: nuevo }));
+  }
+
   onEntregarItem(item: PedidoItem): void {
     if (this.entregandoItemId()) {
       return;
     }
+    const cantidad = this.cantidadEntregarDe(item);
     this.entregandoItemId.set(item.id);
     this.errorMensaje.set(null);
-    this.pedidoService.entregarItem(item.id).subscribe({
-      next: (itemActualizado) => {
+    this.pedidoService.entregarItem(item.id, cantidad).subscribe({
+      next: ({ actualizado, entregado }) => {
         this.entregandoItemId.set(null);
-        this.reemplazarItem(itemActualizado);
+        this.cantidadEntregarDraft.update((draft) => {
+          const { [item.id]: _quitado, ...resto } = draft;
+          return resto;
+        });
+        this.reemplazarItem(actualizado);
+        this.reemplazarItem(entregado);
       },
       error: (error) => {
         this.entregandoItemId.set(null);

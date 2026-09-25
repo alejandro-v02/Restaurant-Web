@@ -102,7 +102,7 @@
               <div class="mt-2 flex items-center justify-between">
                 @if (item.estado === 'ENTREGADO') {
                   <span class="text-xs text-green-700">✓ Entregado</span>
-                } @else {
+                } @else if (item.cantidad === 1) {
                   <ui-button
                     variant="secondary"
                     [loading]="entregandoItemId() === item.id"
@@ -110,6 +110,33 @@
                   >
                     Ya lo entregué
                   </ui-button>
+                } @else {
+                  <div class="flex items-center gap-2">
+                    <button
+                      type="button"
+                      class="h-8 w-8 border border-gray-300 text-sm disabled:opacity-40"
+                      [disabled]="cantidadEntregarDe(item) <= 1"
+                      (click)="onAjustarCantidadEntregar(item, -1)"
+                    >
+                      −
+                    </button>
+                    <span class="text-sm">{{ cantidadEntregarDe(item) }} de {{ item.cantidad }}</span>
+                    <button
+                      type="button"
+                      class="h-8 w-8 border border-gray-300 text-sm disabled:opacity-40"
+                      [disabled]="cantidadEntregarDe(item) >= item.cantidad"
+                      (click)="onAjustarCantidadEntregar(item, 1)"
+                    >
+                      +
+                    </button>
+                    <ui-button
+                      variant="secondary"
+                      [loading]="entregandoItemId() === item.id"
+                      (pressed)="onEntregarItem(item)"
+                    >
+                      Entregar
+                    </ui-button>
+                  </div>
                 }
               </div>
             </div>

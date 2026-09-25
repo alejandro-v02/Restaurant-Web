@@ -26,6 +26,7 @@ import { ObtenerPedidoActivoUseCase } from '../../application/obtener-pedido-act
 import { CrearPedidoDto } from './dto/crear-pedido.dto';
 import { AgregarItemDto } from './dto/agregar-item.dto';
 import { ActualizarItemDto } from './dto/actualizar-item.dto';
+import { EntregarItemDto } from './dto/entregar-item.dto';
 
 @Controller('pedidos')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -92,9 +93,15 @@ export class PedidosController {
   @Roles(RolUsuario.MESERO, RolUsuario.CAJERO, RolUsuario.ADMIN)
   entregarItemPedido(
     @Param('itemId', ParseUUIDPipe) itemId: string,
+    @Body() dto: EntregarItemDto,
     @CurrentUser() usuario: Usuario,
   ) {
-    return this.marcarEntregado.execute(itemId, usuario.id, usuario.rol !== RolUsuario.MESERO);
+    return this.marcarEntregado.execute(
+      itemId,
+      usuario.id,
+      usuario.rol !== RolUsuario.MESERO,
+      dto.cantidad,
+    );
   }
 
   @Patch('mesa/:mesaId/cerrar')
