@@ -93,7 +93,7 @@
       <section class="border-t border-gray-300 pt-4">
         <h2 class="mb-2 text-sm text-gray-500">Pedido actual</h2>
         <div class="mb-3 flex flex-col gap-2">
-          @for (item of items(); track item.id) {
+          @for (item of itemsValidos(); track item.id) {
             <div class="border border-gray-300 p-3">
               <div class="flex items-center justify-between">
                 <span class="text-sm">{{ item.cantidad }}x {{ nombreProducto(item.productoId) }}</span>

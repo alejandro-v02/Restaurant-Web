@@ -50,8 +50,18 @@ export class PedidoPage implements OnDestroy {
     return this.productos().filter((producto) => producto.categoriaId === catId && producto.disponible);
   });
 
+  readonly itemsValidos = computed(() =>
+    this.items().filter(
+      (item) =>
+        !!item.productoId &&
+        Number.isFinite(item.cantidad) &&
+        item.cantidad > 0 &&
+        Number.isFinite(item.precioUnitario),
+    ),
+  );
+
   readonly total = computed(() =>
-    this.items().reduce((suma, item) => suma + item.cantidad * item.precioUnitario, 0),
+    this.itemsValidos().reduce((suma, item) => suma + item.cantidad * item.precioUnitario, 0),
   );
 
   constructor() {
@@ -70,7 +80,7 @@ export class PedidoPage implements OnDestroy {
   }
 
   itemPorProducto(productoId: string): PedidoItem | undefined {
-    return this.items().find((item) => item.productoId === productoId);
+    return this.itemsValidos().find((item) => item.productoId === productoId);
   }
 
   cantidadDe(productoId: string): number {
