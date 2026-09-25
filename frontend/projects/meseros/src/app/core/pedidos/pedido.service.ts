@@ -46,4 +46,8 @@ export class PedidoService {
   enviar(pedidoId: string): Observable<Pedido> {
     return this.http.patch<Pedido>(`${API_BASE_URL}/pedidos/${pedidoId}/enviar`, {});
   }
+
+  cerrarPedidoActivo(mesaId: string): Observable<void> {
+    return this.http.patch<void>(`${API_BASE_URL}/pedidos/mesa/${mesaId}/cerrar`, {});
+  }
 }

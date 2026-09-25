@@ -106,6 +106,16 @@ export class MesasPage {
   onLiberar(mesa: Mesa): void {
     this.procesando.set(true);
     this.errorMensaje.set(null);
+    this.pedidoService.cerrarPedidoActivo(mesa.id).subscribe({
+      next: () => this.liberarMesa(mesa),
+      error: (error) => {
+        this.procesando.set(false);
+        this.errorMensaje.set(error?.error?.message ?? 'No se pudo cerrar el pedido');
+      },
+    });
+  }
+
+  private liberarMesa(mesa: Mesa): void {
     this.mesaService.liberar(mesa.id).subscribe({
       next: () => {
         this.procesando.set(false);
