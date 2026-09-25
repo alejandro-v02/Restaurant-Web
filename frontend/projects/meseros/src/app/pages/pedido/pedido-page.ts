@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -9,13 +9,15 @@ import { EstadoPedidoItem, Pedido, PedidoItem } from '../../core/pedidos/pedido.
 import { ButtonAtom } from '../../ui/atoms/button/button';
 import { InputAtom } from '../../ui/atoms/input/input';
 
+const INTERVALO_ACTUALIZACION_MS = 8000;
+
 @Component({
   selector: 'app-pedido-page',
   standalone: true,
   imports: [FormsModule, ButtonAtom, InputAtom],
   templateUrl: './pedido-page.html',
 })
-export class PedidoPage {
+export class PedidoPage implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly catalogoService = inject(CatalogoService);
@@ -37,6 +39,10 @@ export class PedidoPage {
   readonly confirmadoProductoId = signal<string | null>(null);
   readonly entregandoItemId = signal<string | null>(null);
   private confirmacionTimeout?: ReturnType<typeof setTimeout>;
+  private readonly intervalo = setInterval(
+    () => this.refrescarItems(),
+    INTERVALO_ACTUALIZACION_MS,
+  );
 
   private readonly ETIQUETA_ESTADO: Record<EstadoPedidoItem, string> = {
     PENDIENTE: 'Pendiente',
@@ -56,6 +62,13 @@ export class PedidoPage {
 
   constructor() {
     this.cargarTodo();
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.intervalo);
+    if (this.confirmacionTimeout) {
+      clearTimeout(this.confirmacionTimeout);
+    }
   }
 
   nombreProducto(productoId: string): string {
@@ -213,6 +226,23 @@ export class PedidoPage {
     this.items.update((items) => {
       const existe = items.some((actual) => actual.id === item.id);
       return existe ? items.map((actual) => (actual.id === item.id ? item : actual)) : [...items, item];
+    });
+  }
+
+  private refrescarItems(): void {
+    if (this.procesandoProductoId() || this.entregandoItemId()) {
+      return;
+    }
+    this.pedidoService.obtenerPorMesa(this.mesaId).subscribe({
+      next: (activo) => {
+        if (activo) {
+          this.pedido.set(activo.pedido);
+          this.items.set(activo.items);
+        }
+      },
+      error: () => {
+        // silencioso: no interrumpir al mesero por una actualización fallida
+      },
     });
   }
 
