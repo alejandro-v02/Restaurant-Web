@@ -40,6 +40,7 @@ export class PedidoPage implements OnDestroy {
   readonly entregandoItemId = signal<string | null>(null);
   readonly cantidadEntregarDraft = signal<Record<string, number>>({});
   private confirmacionTimeout?: ReturnType<typeof setTimeout>;
+  private secuenciaActualizacion = 0;
   private readonly intervalo = setInterval(
     () => this.refrescarItems(),
     INTERVALO_ACTUALIZACION_MS,
@@ -252,8 +253,12 @@ export class PedidoPage implements OnDestroy {
   }
 
   private actualizarDesdeServidor(): void {
+    const secuencia = ++this.secuenciaActualizacion;
     this.pedidoService.obtenerPorMesa(this.mesaId).subscribe({
       next: (activo) => {
+        if (secuencia !== this.secuenciaActualizacion) {
+          return;
+        }
         if (activo) {
           this.pedido.set(activo.pedido);
           this.items.set(activo.items);
