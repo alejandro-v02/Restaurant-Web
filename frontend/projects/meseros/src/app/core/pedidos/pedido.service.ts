@@ -39,8 +39,14 @@ export class PedidoService {
     return this.http.delete<void>(`${API_BASE_URL}/pedidos/items/${itemId}`);
   }
 
-  entregarItem(itemId: string): Observable<PedidoItem> {
-    return this.http.patch<PedidoItem>(`${API_BASE_URL}/pedidos/items/${itemId}/entregar`, {});
+  entregarItem(
+    itemId: string,
+    cantidad?: number,
+  ): Observable<{ actualizado: PedidoItem; entregado: PedidoItem }> {
+    return this.http.patch<{ actualizado: PedidoItem; entregado: PedidoItem }>(
+      `${API_BASE_URL}/pedidos/items/${itemId}/entregar`,
+      { cantidad },
+    );
   }
 
   enviar(pedidoId: string): Observable<Pedido> {

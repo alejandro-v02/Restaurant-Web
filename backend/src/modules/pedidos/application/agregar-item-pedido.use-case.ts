@@ -56,6 +56,11 @@ export class AgregarItemPedidoUseCase {
       }
     }
 
+    if (pedido.estado === EstadoPedido.SERVIDO) {
+      pedido.estado = EstadoPedido.ENVIADO_COCINA;
+      await this.pedidoRepository.save(pedido);
+    }
+
     const producto = await this.productoRepository.findById(input.productoId);
     if (!producto || !producto.disponible) {
       throw new BadRequestException('El producto no existe o no está disponible');

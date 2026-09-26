@@ -6,7 +6,13 @@
       @if (pedido(); as pedidoActual) {
         <div class="flex items-center gap-2">
           <span class="border border-gray-300 px-2 py-1 text-xs">
-            {{ pedidoActual.estado === 'ENVIADO_COCINA' ? '🔥 En cocina' : '📝 Tomando pedido' }}
+            {{
+              pedidoActual.estado === 'ENVIADO_COCINA'
+                ? '🔥 En cocina'
+                : pedidoActual.estado === 'SERVIDO'
+                  ? '✅ Todo entregado'
+                  : '📝 Tomando pedido'
+            }}
           </span>
           <span class="text-sm text-gray-500">{{ pedidoActual.personas }} personas</span>
         </div>
@@ -87,7 +93,7 @@
       <section class="border-t border-gray-300 pt-4">
         <h2 class="mb-2 text-sm text-gray-500">Pedido actual</h2>
         <div class="mb-3 flex flex-col gap-2">
-          @for (item of items(); track item.id) {
+          @for (item of itemsValidos(); track item.id) {
             <div class="border border-gray-300 p-3">
               <div class="flex items-center justify-between">
                 <span class="text-sm">{{ item.cantidad }}x {{ nombreProducto(item.productoId) }}</span>
@@ -96,7 +102,7 @@
               <div class="mt-2 flex items-center justify-between">
                 @if (item.estado === 'ENTREGADO') {
                   <span class="text-xs text-green-700">✓ Entregado</span>
-                } @else {
+                } @else if (item.cantidad === 1) {
                   <ui-button
                     variant="secondary"
                     [loading]="entregandoItemId() === item.id"
@@ -104,6 +110,33 @@
                   >
                     Ya lo entregué
                   </ui-button>
+                } @else {
+                  <div class="flex items-center gap-2">
+                    <button
+                      type="button"
+                      class="h-8 w-8 border border-gray-300 text-sm disabled:opacity-40"
+                      [disabled]="cantidadEntregarDe(item) <= 1"
+                      (click)="onAjustarCantidadEntregar(item, -1)"
+                    >
+                      −
+                    </button>
+                    <span class="text-sm">{{ cantidadEntregarDe(item) }} de {{ item.cantidad }}</span>
+                    <button
+                      type="button"
+                      class="h-8 w-8 border border-gray-300 text-sm disabled:opacity-40"
+                      [disabled]="cantidadEntregarDe(item) >= item.cantidad"
+                      (click)="onAjustarCantidadEntregar(item, 1)"
+                    >
+                      +
+                    </button>
+                    <ui-button
+                      variant="secondary"
+                      [loading]="entregandoItemId() === item.id"
+                      (pressed)="onEntregarItem(item)"
+                    >
+                      Entregar
+                    </ui-button>
+                  </div>
                 }
               </div>
             </div>
@@ -117,14 +150,24 @@
           <span>${{ total() }}</span>
         </div>
 
-        <ui-button
-          [fullWidth]="true"
-          [disabled]="items().length === 0"
-          [loading]="enviando()"
-          (pressed)="onEnviarCocina()"
-        >
-          Enviar a cocina
-        </ui-button>
+        @if (pedido()?.estado === 'SERVIDO') {
+          <p class="border border-gray-300 p-3 text-center text-sm text-green-700">
+            ✓ Todo entregado — esperando que caja lo cobre
+          </p>
+        } @else if (pedido()?.estado === 'ENVIADO_COCINA') {
+          <p class="border border-gray-300 p-3 text-center text-sm text-gray-500">
+            🔥 Pedido en cocina
+          </p>
+        } @else {
+          <ui-button
+            [fullWidth]="true"
+            [disabled]="items().length === 0"
+            [loading]="enviando()"
+            (pressed)="onEnviarCocina()"
+          >
+            Enviar a cocina
+          </ui-button>
+        }
       </section>
     }
   </main>

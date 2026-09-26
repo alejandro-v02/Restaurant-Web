@@ -128,12 +128,18 @@ export class CatalogoPage {
   private cargarCategorias(): void {
     this.catalogoService.listarCategorias().subscribe({
       next: (categorias) => this.categorias.set(categorias),
+      error: (error) => {
+        this.notificacionService.error(error?.error?.message ?? 'No se pudieron cargar las categorías');
+      },
     });
   }
 
   private cargarProductos(): void {
     this.catalogoService.listarProductos().subscribe({
       next: (productos) => this.productos.set(productos),
+      error: (error) => {
+        this.notificacionService.error(error?.error?.message ?? 'No se pudieron cargar los productos');
+      },
     });
   }
 }

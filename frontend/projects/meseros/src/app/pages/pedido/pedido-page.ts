@@ -38,7 +38,9 @@ export class PedidoPage implements OnDestroy {
   readonly notasDraft = signal<Record<string, string>>({});
   readonly confirmadoProductoId = signal<string | null>(null);
   readonly entregandoItemId = signal<string | null>(null);
+  readonly cantidadEntregarDraft = signal<Record<string, number>>({});
   private confirmacionTimeout?: ReturnType<typeof setTimeout>;
+  private secuenciaActualizacion = 0;
   private readonly intervalo = setInterval(
     () => this.refrescarItems(),
     INTERVALO_ACTUALIZACION_MS,
@@ -49,8 +51,18 @@ export class PedidoPage implements OnDestroy {
     return this.productos().filter((producto) => producto.categoriaId === catId && producto.disponible);
   });
 
+  readonly itemsValidos = computed(() =>
+    this.items().filter(
+      (item) =>
+        !!item.productoId &&
+        Number.isFinite(item.cantidad) &&
+        item.cantidad > 0 &&
+        Number.isFinite(item.precioUnitario),
+    ),
+  );
+
   readonly total = computed(() =>
-    this.items().reduce((suma, item) => suma + item.cantidad * item.precioUnitario, 0),
+    this.itemsValidos().reduce((suma, item) => suma + item.cantidad * item.precioUnitario, 0),
   );
 
   constructor() {
@@ -69,7 +81,7 @@ export class PedidoPage implements OnDestroy {
   }
 
   itemPorProducto(productoId: string): PedidoItem | undefined {
-    return this.items().find((item) => item.productoId === productoId);
+    return this.itemsValidos().find((item) => item.productoId === productoId);
   }
 
   cantidadDe(productoId: string): number {
@@ -93,6 +105,7 @@ export class PedidoPage implements OnDestroy {
     this.procesandoProductoId.set(producto.id);
     this.errorMensaje.set(null);
 
+    const esItemNuevo = !item;
     const observable = item
       ? this.pedidoService.actualizarItem(item.id, { cantidad: item.cantidad + 1 })
       : this.pedidoService.agregarItem(pedido.id, { productoId: producto.id, cantidad: 1 });
@@ -102,6 +115,10 @@ export class PedidoPage implements OnDestroy {
         this.procesandoProductoId.set(null);
         this.reemplazarItem(itemActualizado);
         this.mostrarConfirmacion(producto.id);
+        if (esItemNuevo) {
+          // Agregar un plato a un pedido ya SERVIDO lo vuelve a ENVIADO_COCINA en el servidor.
+          this.actualizarDesdeServidor();
+        }
       },
       error: (error) => {
         this.procesandoProductoId.set(null);
@@ -131,6 +148,8 @@ export class PedidoPage implements OnDestroy {
         next: () => {
           this.procesandoProductoId.set(null);
           this.items.update((items) => items.filter((existente) => existente.id !== item.id));
+          // Si era el ultimo pendiente, el servidor puede pasar el pedido a SERVIDO.
+          this.actualizarDesdeServidor();
         },
         error: (error) => {
           this.procesandoProductoId.set(null);
@@ -193,16 +212,31 @@ export class PedidoPage implements OnDestroy {
     this.router.navigateByUrl('/');
   }
 
+  cantidadEntregarDe(item: PedidoItem): number {
+    return this.cantidadEntregarDraft()[item.id] ?? item.cantidad;
+  }
+
+  onAjustarCantidadEntregar(item: PedidoItem, delta: number): void {
+    const actual = this.cantidadEntregarDe(item);
+    const nuevo = Math.min(item.cantidad, Math.max(1, actual + delta));
+    this.cantidadEntregarDraft.update((draft) => ({ ...draft, [item.id]: nuevo }));
+  }
+
   onEntregarItem(item: PedidoItem): void {
     if (this.entregandoItemId()) {
       return;
     }
+    const cantidad = this.cantidadEntregarDe(item);
     this.entregandoItemId.set(item.id);
     this.errorMensaje.set(null);
-    this.pedidoService.entregarItem(item.id).subscribe({
-      next: (itemActualizado) => {
+    this.pedidoService.entregarItem(item.id, cantidad).subscribe({
+      next: () => {
         this.entregandoItemId.set(null);
-        this.reemplazarItem(itemActualizado);
+        this.cantidadEntregarDraft.update((draft) => {
+          const { [item.id]: _quitado, ...resto } = draft;
+          return resto;
+        });
+        this.actualizarDesdeServidor();
       },
       error: (error) => {
         this.entregandoItemId.set(null);
@@ -222,8 +256,16 @@ export class PedidoPage implements OnDestroy {
     if (this.procesandoProductoId() || this.entregandoItemId()) {
       return;
     }
+    this.actualizarDesdeServidor();
+  }
+
+  private actualizarDesdeServidor(): void {
+    const secuencia = ++this.secuenciaActualizacion;
     this.pedidoService.obtenerPorMesa(this.mesaId).subscribe({
       next: (activo) => {
+        if (secuencia !== this.secuenciaActualizacion) {
+          return;
+        }
         if (activo) {
           this.pedido.set(activo.pedido);
           this.items.set(activo.items);

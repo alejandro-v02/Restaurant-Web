@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonAtom } from '../../atoms/button/button';
 import { InputAtom } from '../../atoms/input/input';
 import { SelectAtom, SelectOption } from '../../atoms/select/select';
+import { CheckboxAtom } from '../../atoms/checkbox/checkbox';
 import { FormFieldMolecule } from '../../molecules/form-field/form-field';
 import { CrearProductoInput } from '../../../core/catalogo/catalogo.service';
 import { Categoria, TIPOS_IMPUESTO, TipoImpuesto } from '../../../core/catalogo/catalogo.models';
@@ -10,7 +11,7 @@ import { Categoria, TIPOS_IMPUESTO, TipoImpuesto } from '../../../core/catalogo/
 @Component({
   selector: 'ui-producto-form',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonAtom, InputAtom, SelectAtom, FormFieldMolecule],
+  imports: [ReactiveFormsModule, ButtonAtom, InputAtom, SelectAtom, CheckboxAtom, FormFieldMolecule],
   templateUrl: './producto-form.html',
 })
 export class ProductoFormOrganism {
@@ -31,6 +32,7 @@ export class ProductoFormOrganism {
     nombre: ['', [Validators.required]],
     precio: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
     tipoImpuesto: ['EXCLUIDO' as TipoImpuesto, [Validators.required]],
+    enviarACocina: [true],
   });
 
   onSubmit(): void {
@@ -44,7 +46,14 @@ export class ProductoFormOrganism {
       nombre: raw.nombre,
       precio: Number(raw.precio),
       tipoImpuesto: raw.tipoImpuesto,
+      enviarACocina: raw.enviarACocina,
     });
-    this.form.reset({ categoriaId: '', nombre: '', precio: '', tipoImpuesto: 'EXCLUIDO' });
+    this.form.reset({
+      categoriaId: '',
+      nombre: '',
+      precio: '',
+      tipoImpuesto: 'EXCLUIDO',
+      enviarACocina: true,
+    });
   }
 }
