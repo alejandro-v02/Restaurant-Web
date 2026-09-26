@@ -148,6 +148,8 @@ export class PedidoPage implements OnDestroy {
         next: () => {
           this.procesandoProductoId.set(null);
           this.items.update((items) => items.filter((existente) => existente.id !== item.id));
+          // Si era el ultimo pendiente, el servidor puede pasar el pedido a SERVIDO.
+          this.actualizarDesdeServidor();
         },
         error: (error) => {
           this.procesandoProductoId.set(null);
