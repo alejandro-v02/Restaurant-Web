@@ -12,7 +12,7 @@ Punto de venta (POS) completo para restaurantes en Colombia, pensado como un sis
 
 > **Proyecto de portafolio.** La facturación usa un **adaptador simulado** que genera CUFE/CUDE reales (SHA-384) y PDF con QR, construido detrás de un puerto para poder conectar un proveedor tecnológico real sin tocar el dominio (Fase 10). Las tarifas e implementación son de referencia, no asesoría contable.
 
-Este repositorio contiene el **backend** y el **panel web** (admin, caja y cocina). La app Android para meseros se documentará en `frontend/projects/meseros/README.md` cuando se construya (Fase 3).
+Este repositorio contiene el **backend** y una **app web unificada** (`frontend/projects/admin`) con un solo login para los 4 roles: administrador, cajero, cocina y mesero — cada uno ve su propia vista según su rol, todo en un solo puerto.
 
 **Estado actual:** Fases 0 a 2 completas — monorepo, arquitectura hexagonal con 7 módulos de dominio, autenticación JWT con login por PIN para meseros, y CRUD de catálogo. Ver el detalle fase por fase en [Plan de desarrollo](#-plan-de-desarrollo).
 
