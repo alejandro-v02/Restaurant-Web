@@ -13,6 +13,7 @@ export interface CrearProductoInput {
   nombre: string;
   precio: number;
   tipoImpuesto: TipoImpuesto;
+  enviarACocina?: boolean;
 }
 
 export interface ActualizarProductoInput {
