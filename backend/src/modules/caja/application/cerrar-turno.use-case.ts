@@ -37,7 +37,8 @@ export class CerrarTurnoUseCase {
     turno.estado = EstadoTurno.CERRADO;
     turno.fechaCierre = new Date();
     turno.montoCierre = montoCierre;
+    await this.turnoRepository.save(turno);
 
-    return this.turnoRepository.save(turno);
+    return (await this.turnoRepository.findById(turnoId))!;
   }
 }
