@@ -23,6 +23,12 @@ export class AuthService {
       .pipe(tap((sesion) => this.guardarSesion(sesion)));
   }
 
+  loginPin(codigo: string, pin: string): Observable<SesionIniciada> {
+    return this.http
+      .post<SesionIniciada>(`${API_BASE_URL}/auth/login-pin`, { codigo, pin })
+      .pipe(tap((sesion) => this.guardarSesion(sesion)));
+  }
+
   logout(): void {
     this.sesion.set(null);
     localStorage.removeItem(STORAGE_KEY);
