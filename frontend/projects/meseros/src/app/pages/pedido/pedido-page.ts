@@ -105,6 +105,7 @@ export class PedidoPage implements OnDestroy {
     this.procesandoProductoId.set(producto.id);
     this.errorMensaje.set(null);
 
+    const esItemNuevo = !item;
     const observable = item
       ? this.pedidoService.actualizarItem(item.id, { cantidad: item.cantidad + 1 })
       : this.pedidoService.agregarItem(pedido.id, { productoId: producto.id, cantidad: 1 });
@@ -114,6 +115,10 @@ export class PedidoPage implements OnDestroy {
         this.procesandoProductoId.set(null);
         this.reemplazarItem(itemActualizado);
         this.mostrarConfirmacion(producto.id);
+        if (esItemNuevo) {
+          // Agregar un plato a un pedido ya SERVIDO lo vuelve a ENVIADO_COCINA en el servidor.
+          this.actualizarDesdeServidor();
+        }
       },
       error: (error) => {
         this.procesandoProductoId.set(null);
