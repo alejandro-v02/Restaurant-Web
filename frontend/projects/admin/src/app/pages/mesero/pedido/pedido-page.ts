@@ -2,12 +2,12 @@ import { Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { CatalogoService } from '../../core/catalogo/catalogo.service';
-import { Categoria, Producto } from '../../core/catalogo/catalogo.models';
-import { PedidoService } from '../../core/pedidos/pedido.service';
-import { Pedido, PedidoItem } from '../../core/pedidos/pedido.models';
-import { ButtonAtom } from '../../ui/atoms/button/button';
-import { InputAtom } from '../../ui/atoms/input/input';
+import { CatalogoService } from '../../../core/catalogo/catalogo.service';
+import { Categoria, Producto } from '../../../core/catalogo/catalogo.models';
+import { PedidoService } from '../../../core/pedidos/pedido.service';
+import { Pedido, PedidoItem } from '../../../core/pedidos/pedido.models';
+import { ButtonAtom } from '../../../ui/mesero/atoms/button/button';
+import { InputAtom } from '../../../ui/mesero/atoms/input/input';
 
 const INTERVALO_ACTUALIZACION_MS = 8000;
 
@@ -199,7 +199,7 @@ export class PedidoPage implements OnDestroy {
     this.pedidoService.enviar(pedido.id).subscribe({
       next: () => {
         this.enviando.set(false);
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/mesero');
       },
       error: (error) => {
         this.enviando.set(false);
@@ -209,7 +209,7 @@ export class PedidoPage implements OnDestroy {
   }
 
   onVolver(): void {
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/mesero');
   }
 
   cantidadEntregarDe(item: PedidoItem): number {

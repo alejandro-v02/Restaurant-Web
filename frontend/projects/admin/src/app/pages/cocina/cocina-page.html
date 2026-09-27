@@ -1,6 +1,11 @@
 @if (cargando()) {
   <p class="text-sm text-gray-500">Cargando…</p>
 } @else {
+  @if (errorConexion()) {
+    <p class="mb-4 border border-gray-300 p-3 text-base font-semibold text-red-600">
+      ⚠ No se pudo conectar con el sistema — esta lista puede estar desactualizada
+    </p>
+  }
   <table class="w-full border border-gray-300 text-left">
     <thead>
       <tr class="border-b border-gray-300 text-sm text-gray-500">

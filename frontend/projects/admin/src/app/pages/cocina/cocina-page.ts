@@ -24,6 +24,7 @@ export class CocinaPage implements OnDestroy {
 
   readonly items = signal<ItemCocina[]>([]);
   readonly cargando = signal(true);
+  readonly errorConexion = signal(false);
 
   private readonly intervalo = setInterval(() => this.cargar(), INTERVALO_ACTUALIZACION_MS);
 
@@ -71,9 +72,11 @@ export class CocinaPage implements OnDestroy {
     this.cocinaService.listarItems().subscribe({
       next: (items) => {
         this.items.set(items);
+        this.errorConexion.set(false);
         this.cargando.set(false);
       },
       error: () => {
+        this.errorConexion.set(true);
         this.cargando.set(false);
       },
     });

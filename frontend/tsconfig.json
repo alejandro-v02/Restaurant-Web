@@ -35,12 +35,6 @@
     },
     {
       "path": "./projects/shared/tsconfig.spec.json"
-    },
-    {
-      "path": "./projects/meseros/tsconfig.app.json"
-    },
-    {
-      "path": "./projects/meseros/tsconfig.spec.json"
     }
   ]
 }

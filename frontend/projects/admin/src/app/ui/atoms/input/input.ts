@@ -20,6 +20,7 @@ export class InputAtom implements ControlValueAccessor {
   readonly type = input<InputType>('text');
   readonly placeholder = input('');
   readonly autocomplete = input('off');
+  readonly inputmode = input<'text' | 'numeric'>('text');
 
   value = '';
   disabled = false;

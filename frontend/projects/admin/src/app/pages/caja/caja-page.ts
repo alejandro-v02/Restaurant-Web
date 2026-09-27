@@ -38,6 +38,7 @@ export class CajaPage implements OnDestroy {
   readonly procesandoCobro = signal<string | null>(null);
 
   private readonly intervalo = setInterval(() => this.cargarPedidos(), INTERVALO_ACTUALIZACION_MS);
+  private ultimoIntentoFallo = false;
 
   constructor() {
     this.cargarTodo();
@@ -142,8 +143,9 @@ export class CajaPage implements OnDestroy {
           this.cargando.set(false);
         }
       },
-      error: () => {
+      error: (error) => {
         this.cargando.set(false);
+        this.notificacionService.error(error?.error?.message ?? 'No se pudo cargar el turno de caja');
       },
     });
   }
@@ -155,9 +157,18 @@ export class CajaPage implements OnDestroy {
     this.cajaService.listarPedidos().subscribe({
       next: (pedidos) => {
         this.pedidos.set(pedidos);
+        this.ultimoIntentoFallo = false;
         alTerminar?.();
       },
-      error: () => alTerminar?.(),
+      error: (error) => {
+        alTerminar?.();
+        if (!this.ultimoIntentoFallo) {
+          this.ultimoIntentoFallo = true;
+          this.notificacionService.error(
+            error?.error?.message ?? 'No se pudieron cargar los pedidos para cobrar',
+          );
+        }
+      },
     });
   }
 }

@@ -2,12 +2,12 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { MesaService } from '../../core/mesas/mesa.service';
-import { Mesa } from '../../core/mesas/mesa.models';
-import { AuthService } from '../../core/auth/auth.service';
-import { PedidoService } from '../../core/pedidos/pedido.service';
-import { ButtonAtom } from '../../ui/atoms/button/button';
-import { InputAtom } from '../../ui/atoms/input/input';
+import { MesaService } from '../../../core/mesas/mesa.service';
+import { Mesa } from '../../../core/mesas/mesa.models';
+import { AuthService } from '../../../core/auth/auth.service';
+import { PedidoService } from '../../../core/pedidos/pedido.service';
+import { ButtonAtom } from '../../../ui/mesero/atoms/button/button';
+import { InputAtom } from '../../../ui/mesero/atoms/input/input';
 
 type Vista = 'lista' | 'personas';
 
@@ -82,7 +82,7 @@ export class MesasPage {
         this.pedidoService.crear(mesa.id, personas).subscribe({
           next: () => {
             this.procesando.set(false);
-            this.router.navigate(['/pedido', mesa.id], {
+            this.router.navigate(['/mesero/pedido', mesa.id], {
               queryParams: { numero: mesa.numero },
             });
           },
@@ -100,7 +100,7 @@ export class MesasPage {
   }
 
   onContinuarPedido(mesa: Mesa): void {
-    this.router.navigate(['/pedido', mesa.id], { queryParams: { numero: mesa.numero } });
+    this.router.navigate(['/mesero/pedido', mesa.id], { queryParams: { numero: mesa.numero } });
   }
 
   onLiberar(mesa: Mesa): void {
