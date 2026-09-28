@@ -36,7 +36,7 @@
           </ui-button>
           <ui-button
             [fullWidth]="true"
-            [disabled]="!personas()"
+            [disabled]="!personasValidas()"
             [loading]="procesando()"
             (pressed)="onTomarPedido()"
           >

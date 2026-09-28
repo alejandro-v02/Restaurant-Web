@@ -69,6 +69,11 @@ export class MesasPage {
     this.vista.set('lista');
   }
 
+  personasValidas(): boolean {
+    const personas = Number(this.personas());
+    return Number.isInteger(personas) && personas >= 1;
+  }
+
   onTomarPedido(): void {
     const mesa = this.mesaSeleccionada();
     if (!mesa) {
