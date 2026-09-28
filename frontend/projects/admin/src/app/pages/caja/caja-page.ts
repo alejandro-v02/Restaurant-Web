@@ -115,7 +115,8 @@ export class CajaPage implements OnDestroy {
 
   onConfirmarCobro(pedido: PedidoCaja): void {
     const propinaValor = this.propina() ? Number(this.propina()) : undefined;
-    if (propinaValor !== undefined && Number.isNaN(propinaValor)) {
+    if (propinaValor !== undefined && (Number.isNaN(propinaValor) || propinaValor < 0)) {
+      this.notificacionService.error('Poné una propina válida, o dejá el campo vacío');
       return;
     }
     this.procesandoCobro.set(pedido.pedidoId);
