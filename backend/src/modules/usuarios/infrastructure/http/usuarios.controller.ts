@@ -1,11 +1,22 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../../shared/guards/roles.guard';
 import { Roles } from '../../../../shared/decorators/roles.decorator';
 import { RolUsuario } from '../../domain/entities/usuario.entity';
 import { CrearUsuarioUseCase } from '../../application/crear-usuario.use-case';
 import { ListarUsuariosUseCase } from '../../application/listar-usuarios.use-case';
+import { ActualizarUsuarioUseCase } from '../../application/actualizar-usuario.use-case';
 import { CrearUsuarioDto } from './dto/crear-usuario.dto';
+import { ActualizarUsuarioDto } from './dto/actualizar-usuario.dto';
 
 @Controller('usuarios')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -14,6 +25,7 @@ export class UsuariosController {
   constructor(
     private readonly crearUsuario: CrearUsuarioUseCase,
     private readonly listarUsuarios: ListarUsuariosUseCase,
+    private readonly actualizarUsuario: ActualizarUsuarioUseCase,
   ) {}
 
   @Get()
@@ -24,5 +36,10 @@ export class UsuariosController {
   @Post()
   crear(@Body() dto: CrearUsuarioDto) {
     return this.crearUsuario.execute(dto);
+  }
+
+  @Patch(':id')
+  actualizar(@Param('id', ParseUUIDPipe) id: string, @Body() dto: ActualizarUsuarioDto) {
+    return this.actualizarUsuario.execute(id, dto);
   }
 }
