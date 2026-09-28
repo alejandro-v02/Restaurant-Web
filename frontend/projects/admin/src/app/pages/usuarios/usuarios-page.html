@@ -1,0 +1,63 @@
+<div class="flex flex-col gap-6">
+  <section class="max-w-sm border border-gray-300 p-4">
+    <h2 class="mb-3 text-base font-semibold">Nuevo usuario</h2>
+    <ui-usuario-form [loading]="creando()" (creado)="onCrearUsuario($event)" />
+  </section>
+
+  <section class="border border-gray-300">
+    @if (cargando()) {
+      <p class="p-4 text-sm text-gray-500">Cargando…</p>
+    } @else {
+      <table class="w-full text-left">
+        <thead>
+          <tr class="border-b border-gray-300 text-sm text-gray-500">
+            <th class="p-2">Nombre</th>
+            <th class="p-2">Rol</th>
+            <th class="p-2">Correo / código</th>
+            <th class="p-2">Estado</th>
+            <th class="p-2"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (usuario of usuarios(); track usuario.id) {
+            <tr class="border-b border-gray-200">
+              <td class="p-2 text-sm">{{ usuario.nombre }}</td>
+              <td class="p-2 text-sm">{{ usuario.rol }}</td>
+              <td class="p-2 text-sm text-gray-500">{{ usuario.email ?? usuario.codigo }}</td>
+              <td class="p-2">
+                <span
+                  class="border px-2 py-0.5 text-xs"
+                  [class]="usuario.activo ? 'border-gray-300' : 'border-gray-300 text-red-600'"
+                >
+                  {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="p-2">
+                <div class="flex justify-end gap-2">
+                  <ui-button
+                    variant="secondary"
+                    [loading]="procesandoId() === usuario.id"
+                    (pressed)="onResetearClave(usuario)"
+                  >
+                    {{ usuario.rol === 'MESERO' ? 'Resetear PIN' : 'Resetear clave' }}
+                  </ui-button>
+                  <ui-button
+                    variant="secondary"
+                    [loading]="procesandoId() === usuario.id"
+                    (pressed)="onCambiarActivo(usuario)"
+                  >
+                    {{ usuario.activo ? 'Desactivar' : 'Activar' }}
+                  </ui-button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td class="p-4 text-sm text-gray-400" colspan="5">No hay usuarios todavía.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div>
