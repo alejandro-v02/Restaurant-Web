@@ -62,8 +62,11 @@ export class CatalogoPage {
     });
   }
 
-  onEliminarCategoria(id: string): void {
-    this.catalogoService.eliminarCategoria(id).subscribe({
+  onEliminarCategoria(categoria: Categoria): void {
+    if (!confirm(`¿Eliminar la categoría "${categoria.nombre}"? Esto no se puede deshacer.`)) {
+      return;
+    }
+    this.catalogoService.eliminarCategoria(categoria.id).subscribe({
       next: () => {
         this.notificacionService.exito('Categoría eliminada');
         this.cargarCategorias();
@@ -89,8 +92,11 @@ export class CatalogoPage {
     });
   }
 
-  onEliminarProducto(id: string): void {
-    this.catalogoService.eliminarProducto(id).subscribe({
+  onEliminarProducto(producto: Producto): void {
+    if (!confirm(`¿Eliminar "${producto.nombre}"? Esto no se puede deshacer.`)) {
+      return;
+    }
+    this.catalogoService.eliminarProducto(producto.id).subscribe({
       next: () => {
         this.notificacionService.exito('Producto eliminado');
         this.cargarProductos();

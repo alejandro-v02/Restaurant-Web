@@ -61,11 +61,13 @@ export class MesasPage {
     }
     this.mesaSeleccionada.set(mesa);
     this.personas.set('');
+    this.errorMensaje.set(null);
     this.vista.set('personas');
   }
 
   onCancelar(): void {
     this.mesaSeleccionada.set(null);
+    this.errorMensaje.set(null);
     this.vista.set('lista');
   }
 

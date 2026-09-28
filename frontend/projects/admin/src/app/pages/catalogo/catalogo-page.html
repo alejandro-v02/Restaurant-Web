@@ -22,7 +22,7 @@
           <h3 class="text-sm font-semibold">
             {{ grupo.categoria.nombre }} ({{ grupo.productos.length }})
           </h3>
-          <ui-button variant="secondary" (pressed)="onEliminarCategoria(grupo.categoria.id)">
+          <ui-button variant="secondary" (pressed)="onEliminarCategoria(grupo.categoria)">
             Eliminar categoría
           </ui-button>
         </div>
@@ -40,7 +40,7 @@
               <ui-button variant="secondary" (pressed)="onEditarProducto(producto)">
                 Editar
               </ui-button>
-              <ui-button variant="secondary" (pressed)="onEliminarProducto(producto.id)">
+              <ui-button variant="secondary" (pressed)="onEliminarProducto(producto)">
                 Eliminar
               </ui-button>
             </div>
