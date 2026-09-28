@@ -51,6 +51,7 @@ export class CajaPage implements OnDestroy {
   onAbrirTurno(): void {
     const monto = Number(this.montoApertura());
     if (Number.isNaN(monto) || monto < 0) {
+      this.notificacionService.error('Poné un monto válido para abrir el turno');
       return;
     }
     this.procesandoAbrir.set(true);
