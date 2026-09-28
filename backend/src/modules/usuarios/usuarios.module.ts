@@ -5,6 +5,7 @@ import { TypeOrmUsuarioRepository } from './infrastructure/persistence/usuario.r
 import { USUARIO_REPOSITORY } from './domain/ports/usuario.repository.port';
 import { UsuariosController } from './infrastructure/http/usuarios.controller';
 import { CrearUsuarioUseCase } from './application/crear-usuario.use-case';
+import { ListarUsuariosUseCase } from './application/listar-usuarios.use-case';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UsuarioOrmEntity])],
@@ -12,6 +13,7 @@ import { CrearUsuarioUseCase } from './application/crear-usuario.use-case';
   providers: [
     { provide: USUARIO_REPOSITORY, useClass: TypeOrmUsuarioRepository },
     CrearUsuarioUseCase,
+    ListarUsuariosUseCase,
   ],
   exports: [USUARIO_REPOSITORY],
 })
