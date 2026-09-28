@@ -81,7 +81,11 @@ export class CajaPage implements OnDestroy {
   onCerrarTurno(): void {
     const turno = this.turno();
     const monto = Number(this.montoCierre());
-    if (!turno || Number.isNaN(monto) || monto < 0) {
+    if (!turno) {
+      return;
+    }
+    if (Number.isNaN(monto) || monto < 0) {
+      this.notificacionService.error('Poné un monto válido para cerrar el turno');
       return;
     }
     this.procesandoCerrar.set(true);
