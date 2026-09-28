@@ -1,0 +1,29 @@
+<form class="flex flex-col" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+  <ui-form-field label="Nombre" inputId="usuario-nombre">
+    <ui-input id="usuario-nombre" formControlName="nombre" placeholder="Ej. Juan Pérez" />
+  </ui-form-field>
+
+  <ui-form-field label="Rol" inputId="usuario-rol">
+    <ui-select id="usuario-rol" formControlName="rol" [options]="opcionesRol" />
+  </ui-form-field>
+
+  @if (esMesero()) {
+    <ui-form-field label="Código" inputId="usuario-codigo">
+      <ui-input id="usuario-codigo" formControlName="codigo" placeholder="Ej. mesero2" />
+    </ui-form-field>
+
+    <ui-form-field label="PIN" inputId="usuario-pin">
+      <ui-input id="usuario-pin" type="password" formControlName="pin" placeholder="••••" />
+    </ui-form-field>
+  } @else {
+    <ui-form-field label="Correo electrónico" inputId="usuario-email">
+      <ui-input id="usuario-email" type="email" formControlName="email" placeholder="nombre@emberrestaurant.dev" />
+    </ui-form-field>
+
+    <ui-form-field label="Contraseña" inputId="usuario-password">
+      <ui-input id="usuario-password" type="password" formControlName="password" />
+    </ui-form-field>
+  }
+
+  <ui-button type="submit" [fullWidth]="true" [loading]="loading()">Crear usuario</ui-button>
+</form>
