@@ -109,6 +109,9 @@ export class MesasPage {
   }
 
   onLiberar(mesa: Mesa): void {
+    if (this.procesando()) {
+      return;
+    }
     this.procesando.set(true);
     this.errorMensaje.set(null);
     this.pedidoService.cerrarPedidoActivo(mesa.id).subscribe({

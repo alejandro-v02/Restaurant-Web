@@ -69,7 +69,8 @@
                 </span>
                 <button
                   type="button"
-                  class="border-l border-gray-900 px-2 py-2 text-sm text-gray-500"
+                  class="border-l border-gray-900 px-2 py-2 text-sm text-gray-500 disabled:opacity-40"
+                  [disabled]="procesando()"
                   (click)="onLiberar(mesa)"
                 >
                   ✕
