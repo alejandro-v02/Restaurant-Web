@@ -4,6 +4,7 @@ import { DashboardPage } from './pages/dashboard/dashboard-page';
 import { CatalogoPage } from './pages/catalogo/catalogo-page';
 import { CocinaPage } from './pages/cocina/cocina-page';
 import { CajaPage } from './pages/caja/caja-page';
+import { UsuariosPage } from './pages/usuarios/usuarios-page';
 import { MesasPage } from './pages/mesero/mesas/mesas-page';
 import { PedidoPage } from './pages/mesero/pedido/pedido-page';
 import { AppShellTemplate } from './ui/templates/app-shell/app-shell';
@@ -28,6 +29,7 @@ export const routes: Routes = [
       { path: 'catalogo', component: CatalogoPage, data: { title: 'Catálogo' } },
       { path: 'cocina', component: CocinaPage, data: { title: 'Cocina' } },
       { path: 'caja', component: CajaPage, data: { title: 'Caja' } },
+      { path: 'usuarios', component: UsuariosPage, data: { title: 'Usuarios' } },
     ],
   },
 ];
