@@ -42,13 +42,15 @@ export class CrearUsuarioUseCase {
       }
     }
 
+    const esMesero = input.rol === RolUsuario.MESERO;
+
     const usuario = new Usuario({
       nombre: input.nombre,
       rol: input.rol,
-      email: input.email,
-      codigo: input.codigo,
-      passwordHash: input.password ? await bcrypt.hash(input.password, RONDAS_HASH) : undefined,
-      pinHash: input.pin ? await bcrypt.hash(input.pin, RONDAS_HASH) : undefined,
+      email: esMesero ? undefined : input.email,
+      codigo: esMesero ? input.codigo : undefined,
+      passwordHash: !esMesero && input.password ? await bcrypt.hash(input.password, RONDAS_HASH) : undefined,
+      pinHash: esMesero && input.pin ? await bcrypt.hash(input.pin, RONDAS_HASH) : undefined,
     });
 
     const guardado = await this.usuarioRepository.save(usuario);
