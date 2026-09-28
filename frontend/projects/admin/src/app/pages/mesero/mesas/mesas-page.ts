@@ -69,6 +69,11 @@ export class MesasPage {
     this.vista.set('lista');
   }
 
+  personasValidas(): boolean {
+    const personas = Number(this.personas());
+    return Number.isInteger(personas) && personas >= 1;
+  }
+
   onTomarPedido(): void {
     const mesa = this.mesaSeleccionada();
     if (!mesa) {
@@ -104,6 +109,9 @@ export class MesasPage {
   }
 
   onLiberar(mesa: Mesa): void {
+    if (this.procesando()) {
+      return;
+    }
     this.procesando.set(true);
     this.errorMensaje.set(null);
     this.pedidoService.cerrarPedidoActivo(mesa.id).subscribe({

@@ -51,6 +51,7 @@ export class CajaPage implements OnDestroy {
   onAbrirTurno(): void {
     const monto = Number(this.montoApertura());
     if (Number.isNaN(monto) || monto < 0) {
+      this.notificacionService.error('Poné un monto válido para abrir el turno');
       return;
     }
     this.procesandoAbrir.set(true);
@@ -80,7 +81,11 @@ export class CajaPage implements OnDestroy {
   onCerrarTurno(): void {
     const turno = this.turno();
     const monto = Number(this.montoCierre());
-    if (!turno || Number.isNaN(monto) || monto < 0) {
+    if (!turno) {
+      return;
+    }
+    if (Number.isNaN(monto) || monto < 0) {
+      this.notificacionService.error('Poné un monto válido para cerrar el turno');
       return;
     }
     this.procesandoCerrar.set(true);
@@ -110,7 +115,8 @@ export class CajaPage implements OnDestroy {
 
   onConfirmarCobro(pedido: PedidoCaja): void {
     const propinaValor = this.propina() ? Number(this.propina()) : undefined;
-    if (propinaValor !== undefined && Number.isNaN(propinaValor)) {
+    if (propinaValor !== undefined && (Number.isNaN(propinaValor) || propinaValor < 0)) {
+      this.notificacionService.error('Poné una propina válida, o dejá el campo vacío');
       return;
     }
     this.procesandoCobro.set(pedido.pedidoId);
