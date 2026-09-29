@@ -35,7 +35,7 @@ export class ActualizarUsuarioUseCase {
     }
 
     if (input.nombre !== undefined) {
-      usuario.nombre = input.nombre;
+      usuario.nombre = input.nombre.trim();
     }
     if (input.activo !== undefined) {
       usuario.activo = input.activo;
