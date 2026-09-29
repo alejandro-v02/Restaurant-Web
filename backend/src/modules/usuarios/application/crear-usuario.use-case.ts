@@ -25,8 +25,8 @@ export class CrearUsuarioUseCase {
 
   async execute(input: CrearUsuarioInput): Promise<UsuarioResumen> {
     const nombre = input.nombre.trim();
-    const email = input.email?.trim();
-    const codigo = input.codigo?.trim();
+    const email = input.email?.trim().toLowerCase();
+    const codigo = input.codigo?.trim().toLowerCase();
     const esMesero = input.rol === RolUsuario.MESERO;
 
     if (esMesero) {
