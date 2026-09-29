@@ -29,7 +29,7 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<SesionIniciada> {
-    const usuario = await this.usuarioRepository.findByEmail(email);
+    const usuario = await this.usuarioRepository.findByEmail(email.trim().toLowerCase());
     if (!usuario?.passwordHash || !usuario.activo) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
@@ -43,7 +43,7 @@ export class AuthService {
   }
 
   async loginConPin(codigo: string, pin: string): Promise<SesionIniciada> {
-    const usuario = await this.usuarioRepository.findByCodigo(codigo);
+    const usuario = await this.usuarioRepository.findByCodigo(codigo.trim().toLowerCase());
     if (!usuario?.pinHash || !usuario.activo) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
