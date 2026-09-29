@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { USUARIO_REPOSITORY } from '../domain/ports/usuario.repository.port';
 import type { UsuarioRepository } from '../domain/ports/usuario.repository.port';
@@ -20,10 +20,18 @@ export class ActualizarUsuarioUseCase {
     private readonly usuarioRepository: UsuarioRepository,
   ) {}
 
-  async execute(id: string, input: ActualizarUsuarioInput): Promise<UsuarioResumen> {
+  async execute(
+    id: string,
+    input: ActualizarUsuarioInput,
+    solicitanteId: string,
+  ): Promise<UsuarioResumen> {
     const usuario = await this.usuarioRepository.findById(id);
     if (!usuario) {
       throw new NotFoundException('Usuario no encontrado');
+    }
+
+    if (input.activo === false && id === solicitanteId) {
+      throw new ConflictException('No podés desactivar tu propia cuenta');
     }
 
     if (input.nombre !== undefined) {
