@@ -5,6 +5,7 @@ import { TypeOrmMesaRepository } from './infrastructure/persistence/mesa.reposit
 import { MESA_REPOSITORY } from './domain/ports/mesa.repository.port';
 import { MesasController } from './infrastructure/http/mesas.controller';
 import { ListarMesasUseCase } from './application/listar-mesas.use-case';
+import { ListarMesasDetalladoUseCase } from './application/listar-mesas-detallado.use-case';
 import { AsignarMeseroUseCase } from './application/asignar-mesero.use-case';
 import { TomarMesaUseCase } from './application/tomar-mesa.use-case';
 import { LiberarMesaUseCase } from './application/liberar-mesa.use-case';
@@ -16,6 +17,7 @@ import { UsuariosModule } from '../usuarios/usuarios.module';
   providers: [
     { provide: MESA_REPOSITORY, useClass: TypeOrmMesaRepository },
     ListarMesasUseCase,
+    ListarMesasDetalladoUseCase,
     AsignarMeseroUseCase,
     TomarMesaUseCase,
     LiberarMesaUseCase,
