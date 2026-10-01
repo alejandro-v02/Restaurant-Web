@@ -43,10 +43,11 @@
                   </ui-button>
                   <ui-button
                     variant="secondary"
+                    [disabled]="usuario.id === propioId"
                     [loading]="procesandoId() === usuario.id"
                     (pressed)="onCambiarActivo(usuario)"
                   >
-                    {{ usuario.activo ? 'Desactivar' : 'Activar' }}
+                    {{ usuario.id === propioId ? 'Esta es tu cuenta' : (usuario.activo ? 'Desactivar' : 'Activar') }}
                   </ui-button>
                 </div>
               </td>

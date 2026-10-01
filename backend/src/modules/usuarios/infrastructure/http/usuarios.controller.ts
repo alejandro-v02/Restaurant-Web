@@ -11,7 +11,8 @@ import {
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
 import { RolesGuard } from '../../../../shared/guards/roles.guard';
 import { Roles } from '../../../../shared/decorators/roles.decorator';
-import { RolUsuario } from '../../domain/entities/usuario.entity';
+import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
+import { RolUsuario, Usuario } from '../../domain/entities/usuario.entity';
 import { CrearUsuarioUseCase } from '../../application/crear-usuario.use-case';
 import { ListarUsuariosUseCase } from '../../application/listar-usuarios.use-case';
 import { ActualizarUsuarioUseCase } from '../../application/actualizar-usuario.use-case';
@@ -39,7 +40,11 @@ export class UsuariosController {
   }
 
   @Patch(':id')
-  actualizar(@Param('id', ParseUUIDPipe) id: string, @Body() dto: ActualizarUsuarioDto) {
-    return this.actualizarUsuario.execute(id, dto);
+  actualizar(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: ActualizarUsuarioDto,
+    @CurrentUser() usuario: Usuario,
+  ) {
+    return this.actualizarUsuario.execute(id, dto, usuario.id);
   }
 }

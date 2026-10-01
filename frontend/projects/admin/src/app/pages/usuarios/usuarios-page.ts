@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CrearUsuarioInput, UsuariosService } from '../../core/usuarios/usuarios.service';
 import { Usuario } from '../../core/usuarios/usuarios.models';
 import { NotificacionService } from '../../core/notificaciones/notificacion.service';
+import { AuthService } from '../../core/auth/auth.service';
 import { UsuarioFormOrganism } from '../../ui/organisms/usuario-form/usuario-form';
 import { ButtonAtom } from '../../ui/atoms/button/button';
 
@@ -14,6 +15,9 @@ import { ButtonAtom } from '../../ui/atoms/button/button';
 export class UsuariosPage {
   private readonly usuariosService = inject(UsuariosService);
   private readonly notificacionService = inject(NotificacionService);
+  private readonly authService = inject(AuthService);
+
+  readonly propioId = this.authService.usuario()?.id;
 
   readonly usuarios = signal<Usuario[]>([]);
   readonly cargando = signal(true);
@@ -40,7 +44,7 @@ export class UsuariosPage {
   }
 
   onCambiarActivo(usuario: Usuario): void {
-    if (this.procesandoId()) {
+    if (this.procesandoId() || usuario.id === this.propioId) {
       return;
     }
     this.procesandoId.set(usuario.id);

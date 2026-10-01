@@ -24,31 +24,34 @@ export class CrearUsuarioUseCase {
   ) {}
 
   async execute(input: CrearUsuarioInput): Promise<UsuarioResumen> {
-    if (input.rol === RolUsuario.MESERO) {
-      if (!input.codigo || !input.pin) {
+    const nombre = input.nombre.trim();
+    const email = input.email?.trim().toLowerCase();
+    const codigo = input.codigo?.trim().toLowerCase();
+    const esMesero = input.rol === RolUsuario.MESERO;
+
+    if (esMesero) {
+      if (!codigo || !input.pin) {
         throw new ConflictException('El mesero necesita código y PIN');
       }
-      const existente = await this.usuarioRepository.findByCodigo(input.codigo);
+      const existente = await this.usuarioRepository.findByCodigo(codigo);
       if (existente) {
         throw new ConflictException('Ya existe un usuario con ese código');
       }
     } else {
-      if (!input.email || !input.password) {
+      if (!email || !input.password) {
         throw new ConflictException('Este rol necesita correo y contraseña');
       }
-      const existente = await this.usuarioRepository.findByEmail(input.email);
+      const existente = await this.usuarioRepository.findByEmail(email);
       if (existente) {
         throw new ConflictException('Ya existe un usuario con ese correo');
       }
     }
 
-    const esMesero = input.rol === RolUsuario.MESERO;
-
     const usuario = new Usuario({
-      nombre: input.nombre,
+      nombre,
       rol: input.rol,
-      email: esMesero ? undefined : input.email,
-      codigo: esMesero ? input.codigo : undefined,
+      email: esMesero ? undefined : email,
+      codigo: esMesero ? codigo : undefined,
       passwordHash: !esMesero && input.password ? await bcrypt.hash(input.password, RONDAS_HASH) : undefined,
       pinHash: esMesero && input.pin ? await bcrypt.hash(input.pin, RONDAS_HASH) : undefined,
     });
