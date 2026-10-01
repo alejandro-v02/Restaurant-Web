@@ -39,6 +39,7 @@ export class CajaPage implements OnDestroy {
 
   private readonly intervalo = setInterval(() => this.cargarPedidos(), INTERVALO_ACTUALIZACION_MS);
   private ultimoIntentoFallo = false;
+  private secuenciaPedidos = 0;
 
   constructor() {
     this.cargarTodo();
@@ -160,20 +161,26 @@ export class CajaPage implements OnDestroy {
     if (!this.turno()) {
       return;
     }
+    const secuencia = ++this.secuenciaPedidos;
     this.cajaService.listarPedidos().subscribe({
       next: (pedidos) => {
+        alTerminar?.();
+        if (secuencia !== this.secuenciaPedidos) {
+          // Una actualizacion mas nueva ya esta en curso o ya llego; esta respuesta esta vieja.
+          return;
+        }
         this.pedidos.set(pedidos);
         this.ultimoIntentoFallo = false;
-        alTerminar?.();
       },
       error: (error) => {
         alTerminar?.();
-        if (!this.ultimoIntentoFallo) {
-          this.ultimoIntentoFallo = true;
-          this.notificacionService.error(
-            error?.error?.message ?? 'No se pudieron cargar los pedidos para cobrar',
-          );
+        if (secuencia !== this.secuenciaPedidos || this.ultimoIntentoFallo) {
+          return;
         }
+        this.ultimoIntentoFallo = true;
+        this.notificacionService.error(
+          error?.error?.message ?? 'No se pudieron cargar los pedidos para cobrar',
+        );
       },
     });
   }
