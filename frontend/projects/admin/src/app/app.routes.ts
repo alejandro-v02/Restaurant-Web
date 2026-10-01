@@ -5,6 +5,7 @@ import { CatalogoPage } from './pages/catalogo/catalogo-page';
 import { CocinaPage } from './pages/cocina/cocina-page';
 import { CajaPage } from './pages/caja/caja-page';
 import { UsuariosPage } from './pages/usuarios/usuarios-page';
+import { MesasAdminPage } from './pages/mesas/mesas-admin-page';
 import { MesasPage } from './pages/mesero/mesas/mesas-page';
 import { PedidoPage } from './pages/mesero/pedido/pedido-page';
 import { AppShellTemplate } from './ui/templates/app-shell/app-shell';
@@ -27,6 +28,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: DashboardPage, data: { title: 'Dashboard' } },
       { path: 'catalogo', component: CatalogoPage, data: { title: 'Catálogo' } },
+      { path: 'mesas', component: MesasAdminPage, data: { title: 'Mesas' } },
       { path: 'cocina', component: CocinaPage, data: { title: 'Cocina' } },
       { path: 'caja', component: CajaPage, data: { title: 'Caja' } },
       { path: 'usuarios', component: UsuariosPage, data: { title: 'Usuarios' } },
