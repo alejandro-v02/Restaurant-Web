@@ -7,3 +7,12 @@ export interface Mesa {
   estado: EstadoMesa;
   meseroId?: string | null;
 }
+
+export interface MesaDetallada {
+  id: string;
+  numero: number;
+  capacidad: number;
+  estado: EstadoMesa;
+  meseroId: string | null;
+  meseroNombre: string | null;
+}

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../config/api.config';
-import { Mesa } from './mesa.models';
+import { Mesa, MesaDetallada } from './mesa.models';
 
 @Injectable({ providedIn: 'root' })
 export class MesaService {
@@ -12,11 +12,19 @@ export class MesaService {
     return this.http.get<Mesa[]>(`${API_BASE_URL}/mesas`);
   }
 
+  listarDetallado(): Observable<MesaDetallada[]> {
+    return this.http.get<MesaDetallada[]>(`${API_BASE_URL}/mesas/resumen`);
+  }
+
   tomar(id: string): Observable<Mesa> {
     return this.http.patch<Mesa>(`${API_BASE_URL}/mesas/${id}/tomar`, {});
   }
 
   liberar(id: string): Observable<Mesa> {
     return this.http.patch<Mesa>(`${API_BASE_URL}/mesas/${id}/liberar`, {});
+  }
+
+  asignarMesero(id: string, meseroId: string | null): Observable<Mesa> {
+    return this.http.patch<Mesa>(`${API_BASE_URL}/mesas/${id}/mesero`, { meseroId });
   }
 }
