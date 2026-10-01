@@ -39,6 +39,14 @@ export class MesasAdminPage {
     if (this.procesandoId()) {
       return;
     }
+    if (mesa.estado !== 'LIBRE' && mesa.meseroId !== meseroId) {
+      const continuar = confirm(
+        `La mesa ${mesa.numero} ya está ocupada. Si tiene un pedido en curso, va a seguir a nombre del mesero anterior. ¿Reasignar de todos modos?`,
+      );
+      if (!continuar) {
+        return;
+      }
+    }
     this.procesandoId.set(mesa.id);
     this.mesaService.asignarMesero(mesa.id, meseroId || null).subscribe({
       next: () => {
