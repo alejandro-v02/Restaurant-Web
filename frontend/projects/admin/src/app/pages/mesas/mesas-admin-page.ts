@@ -26,10 +26,23 @@ export class MesasAdminPage {
   readonly cargando = signal(true);
   readonly procesandoId = signal<string | null>(null);
 
-  readonly opcionesMesero = computed<SelectOption[]>(() => [
-    { value: '', label: 'Sin asignar' },
-    ...this.meseros().map((mesero) => ({ value: mesero.id, label: mesero.nombre })),
-  ]);
+  readonly opcionesMesero = computed<SelectOption[]>(() => {
+    const idsAsignados = new Set(
+      this.mesas()
+        .map((mesa) => mesa.meseroId)
+        .filter((id): id is string => !!id),
+    );
+    const visibles = this.meseros().filter(
+      (mesero) => mesero.activo || idsAsignados.has(mesero.id),
+    );
+    return [
+      { value: '', label: 'Sin asignar' },
+      ...visibles.map((mesero) => ({
+        value: mesero.id,
+        label: mesero.activo ? mesero.nombre : `${mesero.nombre} (inactivo)`,
+      })),
+    ];
+  });
 
   constructor() {
     this.cargarTodo();
@@ -91,7 +104,7 @@ export class MesasAdminPage {
     this.cargando.set(true);
     this.usuariosService.listar().subscribe({
       next: (usuarios) => {
-        this.meseros.set(usuarios.filter((usuario) => usuario.rol === 'MESERO' && usuario.activo));
+        this.meseros.set(usuarios.filter((usuario) => usuario.rol === 'MESERO'));
         this.cargarMesas();
       },
       error: () => this.cargarMesas(),
