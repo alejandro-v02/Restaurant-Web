@@ -8,7 +8,7 @@ import { MESA_REPOSITORY } from '../domain/ports/mesa.repository.port';
 import type { MesaRepository } from '../domain/ports/mesa.repository.port';
 import { USUARIO_REPOSITORY } from '../../usuarios/domain/ports/usuario.repository.port';
 import type { UsuarioRepository } from '../../usuarios/domain/ports/usuario.repository.port';
-import { Mesa } from '../domain/entities/mesa.entity';
+import { EstadoMesa, Mesa } from '../domain/entities/mesa.entity';
 import { RolUsuario } from '../../usuarios/domain/entities/usuario.entity';
 
 @Injectable()
@@ -33,6 +33,7 @@ export class AsignarMeseroUseCase {
     }
 
     mesa.meseroId = meseroId;
+    mesa.estado = meseroId ? EstadoMesa.OCUPADA : EstadoMesa.LIBRE;
     await this.mesaRepository.save(mesa);
 
     return (await this.mesaRepository.findById(mesaId))!;
