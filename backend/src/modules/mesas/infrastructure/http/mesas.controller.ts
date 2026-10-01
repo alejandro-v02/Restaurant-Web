@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, UseGuards } from '@nestjs/common';
 import { ListarMesasUseCase } from '../../application/listar-mesas.use-case';
+import { ListarMesasDetalladoUseCase } from '../../application/listar-mesas-detallado.use-case';
 import { AsignarMeseroUseCase } from '../../application/asignar-mesero.use-case';
 import { TomarMesaUseCase } from '../../application/tomar-mesa.use-case';
 import { LiberarMesaUseCase } from '../../application/liberar-mesa.use-case';
@@ -15,6 +16,7 @@ import { RolUsuario, Usuario } from '../../../usuarios/domain/entities/usuario.e
 export class MesasController {
   constructor(
     private readonly listarMesas: ListarMesasUseCase,
+    private readonly listarMesasDetallado: ListarMesasDetalladoUseCase,
     private readonly asignarMesero: AsignarMeseroUseCase,
     private readonly tomarMesa: TomarMesaUseCase,
     private readonly liberarMesa: LiberarMesaUseCase,
@@ -23,6 +25,12 @@ export class MesasController {
   @Get()
   listar() {
     return this.listarMesas.execute();
+  }
+
+  @Get('resumen')
+  @Roles(RolUsuario.ADMIN, RolUsuario.CAJERO)
+  listarDetallado() {
+    return this.listarMesasDetallado.execute();
   }
 
   @Patch(':id/mesero')

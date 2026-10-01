@@ -1,0 +1,46 @@
+@if (cargando()) {
+  <p class="text-sm text-gray-500">Cargando…</p>
+} @else {
+  <table class="w-full border border-gray-300 text-left">
+    <thead>
+      <tr class="border-b border-gray-300 text-sm text-gray-500">
+        <th class="p-2">Mesa</th>
+        <th class="p-2">Estado</th>
+        <th class="p-2">Mesero</th>
+        <th class="p-2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (mesa of mesas(); track mesa.id) {
+        <tr class="border-b border-gray-200">
+          <td class="p-2 text-sm font-semibold">{{ mesa.numero }}</td>
+          <td class="p-2">
+            <span class="border border-gray-300 px-2 py-0.5 text-xs">{{ mesa.estado }}</span>
+          </td>
+          <td class="w-56 p-2">
+            <ui-select
+              [options]="opcionesMesero()"
+              [ngModel]="mesa.meseroId ?? ''"
+              (ngModelChange)="onReasignar(mesa, $event)"
+            />
+          </td>
+          <td class="p-2">
+            @if (mesa.estado !== 'LIBRE') {
+              <ui-button
+                variant="secondary"
+                [loading]="procesandoId() === mesa.id"
+                (pressed)="onLiberar(mesa)"
+              >
+                Liberar
+              </ui-button>
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td class="p-4 text-sm text-gray-400" colspan="4">No hay mesas todavía.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
