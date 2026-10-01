@@ -107,6 +107,11 @@ export class MesasPage {
   }
 
   onContinuarPedido(mesa: Mesa): void {
+    if (!this.estadoPedidoPorMesa()[mesa.id]) {
+      // Asignada (ej. por un admin) pero todavía sin pedido: no hay nada que "continuar" todavía.
+      this.onSeleccionarNumero(mesa);
+      return;
+    }
     this.router.navigate(['/mesero/pedido', mesa.id], { queryParams: { numero: mesa.numero } });
   }
 
