@@ -6,7 +6,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
-![Progreso](https://img.shields.io/badge/progreso-3%2F12%20fases-yellow)
+![Progreso](https://img.shields.io/badge/progreso-6%2F12%20fases-yellow)
 
 Punto de venta (POS) completo para restaurantes en Colombia, pensado como un sistema real de operación diaria: **mesas y pedidos**, **cocina en tiempo real**, **caja** y **facturación electrónica DIAN** (tiquete POS electrónico y factura electrónica de venta), todo sobre un backend con **arquitectura hexagonal** para que el dominio del negocio no dependa del framework, la base de datos ni del proveedor de facturación.
 
@@ -14,7 +14,10 @@ Punto de venta (POS) completo para restaurantes en Colombia, pensado como un sis
 
 Este repositorio contiene el **backend** y una **app web unificada** (`frontend/projects/admin`) con un solo login para los 4 roles: administrador, cajero, cocina y mesero — cada uno ve su propia vista según su rol, todo en un solo puerto.
 
-**Estado actual:** Fases 0 a 2 completas — monorepo, arquitectura hexagonal con 7 módulos de dominio, autenticación JWT con login por PIN para meseros, y CRUD de catálogo. Ver el detalle fase por fase en [Plan de desarrollo](#-plan-de-desarrollo).
+**Estado actual:** mesas y pedidos, cocina (KDS), caja con turnos y pagos, catálogo, y
+administración de usuarios — todo usable de punta a punta en una sola app web. Falta
+facturación electrónica real y reportes. Ver el detalle fase por fase en
+[Plan de desarrollo](#-plan-de-desarrollo).
 
 ---
 
@@ -278,9 +281,13 @@ stateDiagram-v2
 - [x] **Fase 0 – Base del proyecto:** monorepo, Docker (PostgreSQL + Redis), TypeORM, estructura hexagonal, modelo de datos inicial.
 - [x] **Fase 1 – Autenticación y roles:** JWT, login por PIN para meseros, guards, asignación de mesas por mesero.
 - [x] **Fase 2 – Catálogo:** CRUD de categorías y productos con tipo de impuesto.
-- [ ] **Fase 3 – App de meseros:** Angular + Capacitor (Android).
-- [ ] **Fase 4 – Cocina en tiempo real:** gateway WebSocket, pantalla KDS y notificaciones a meseros.
-- [ ] **Fase 5 – Caja y pagos:** turnos, métodos de pago, propina y cuadre de caja.
+- [x] **Usuarios y Mesas (admin):** CRUD de usuarios (crear, desactivar, resetear clave/PIN) y
+  vista general de mesas (reasignar mesero, liberar), todo dentro del mismo panel.
+- [x] **Fase 3 – App de meseros:** una sola app web (no Android/Capacitor aparte) con un login
+  que sirve para los 4 roles y redirige según cuál sea.
+- [x] **Fase 4 – Cocina:** pantalla KDS agrupada por plato, actualización automática cada 8s
+  (sin WebSocket — se eligió sondeo simple por ahora), solo platos de cocina (no bebidas/asador).
+- [x] **Fase 5 – Caja y pagos:** turnos de caja, métodos de pago, propina y cuadre al cerrar.
 - [ ] **Fase 6 – Facturación simulada:** puerto, adaptador simulado, CUFE/CUDE, PDF con QR y clientes.
 - [ ] **Fase 7 – Robustez de facturación:** cola BullMQ, estados, reintentos, contingencia, notas crédito, numeración y correo.
 - [ ] **Fase 8 – Modo sin conexión (app):** sincronización de pedidos pendientes.
